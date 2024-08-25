@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils"
 
 export default function LandingPageBanner() {
   return (
-    <div className="relative flex h-[100dvh] w-full flex-col items-center py-10 overflow-hidden rounded-lg border bg-background md:shadow-xl">
+    <div className="relative flex h-[95dvh] w-full flex-col justify-center items-center py-10 overflow-hidden rounded-lg border">
       <section className="text-center xl:w-3/4">
         <h1 className="whitespace-pre-wrap text-center z-10 xl:text-6xl text-lg font-extrabold tracking-tighter text-black dark:text-white bg-gradient-to-r from-[#203A43] via-[#203A43] to-[#3fada8] inline-block text-transparent bg-clip-text">
           We Have Better Solutions, Career Planning For Your Next Interview
