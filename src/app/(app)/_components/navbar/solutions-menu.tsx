@@ -13,7 +13,7 @@ import { solutionsMenuItems } from "@/lib/lists"
 
 export const SolutionsMenu = () => {
   return (
-    <NavigationMenu>
+    <NavigationMenu className="z-50">
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger>Solutions</NavigationMenuTrigger>

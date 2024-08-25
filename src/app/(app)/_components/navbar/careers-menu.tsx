@@ -16,11 +16,11 @@ export const CareersMenu = async () => {
   console.log(categories)
 
   return (
-    <NavigationMenu>
+    <NavigationMenu className="z-50">
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger>Careers</NavigationMenuTrigger>
-          <NavigationMenuContent className="min-w-[800px] p-2">
+          <NavigationMenuContent className="xl:min-w-[800px] min-w-[300px] p-2">
             <div className="grid xl:grid-cols-2 grid-cols-1 gap-2">
               {categories.map((category) => (
                 <NavMenuItem

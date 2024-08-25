@@ -25,6 +25,8 @@ const config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         hoverMain: "#f1f5f9",
+        secondaryMain: "#222831",
+        secondaryMainLight: "#31363F",
         primary: {
           DEFAULT: "#76abae",
           foreground: "hsl(var(--primary-foreground))",
