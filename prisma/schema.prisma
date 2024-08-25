@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_LOCAL")
+  url      = env("DATABASE_HOST")
 }
 
 // DATABASE_LOCAL
@@ -17,7 +17,7 @@ model Admin {
   username String @unique
   password String
 
-  createdAt DateTime  @default(now()) @db.Timestamp()
+  createdAt DateTime?  @db.Timestamp()
   updatedAt DateTime? @db.Timestamp()
   deletedAt DateTime? @db.Timestamp()
 
@@ -37,7 +37,7 @@ model User {
   career Career @relation(fields: [careerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   plan   Plan   @relation(fields: [planId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  createdAt DateTime  @default(now()) @db.Timestamp()
+  createdAt DateTime?  @db.Timestamp()
   updatedAt DateTime? @db.Timestamp()
   deletedAt DateTime? @db.Timestamp()
 
@@ -98,7 +98,7 @@ model Subscription {
   subscriptionId  String
   expiresAtNumber BigInt
   expiresAt       DateTime @db.Timestamp()
-  subscribedAt    DateTime @default(now()) @db.Timestamp()
+  subscribedAt    DateTime @db.Timestamp()
 
   plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   User User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
