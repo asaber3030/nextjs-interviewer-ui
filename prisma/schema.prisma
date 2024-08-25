@@ -1,0 +1,236 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_LOCAL")
+}
+
+// DATABASE_LOCAL
+// DATABASE_HOST
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  name     String @db.VarChar(50)
+  email    String @unique
+  username String @unique
+  password String
+
+  createdAt DateTime  @default(now()) @db.Timestamp()
+  updatedAt DateTime? @db.Timestamp()
+  deletedAt DateTime? @db.Timestamp()
+
+  @@map("admins")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String @db.VarChar(50)
+  email    String @unique
+  username String @unique
+  password String
+
+  planId   Int @default(1)
+  careerId Int
+
+  career Career @relation(fields: [careerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  plan   Plan   @relation(fields: [planId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime  @default(now()) @db.Timestamp()
+  updatedAt DateTime? @db.Timestamp()
+  deletedAt DateTime? @db.Timestamp()
+
+  subscriptions    Subscription[]
+  takenExams       UserExam[]
+  analyticalModels AnalyticalModel[]
+  answers          ExamAnswer[]
+
+  @@map("users")
+}
+
+model Plan {
+  id          Int    @id @default(autoincrement())
+  name        String @db.VarChar(50)
+  description String
+  oldPrice    Int    @default(0) @db.MediumInt
+  price       Int    @db.MediumInt
+  paymentLink String @default("") @db.LongText
+
+  numberOfLevels    Int @default(1) @db.TinyInt
+  numberOfPositions Int @default(1) @db.TinyInt
+  numberOfQuestions Int @default(1) @db.SmallInt
+
+  features      PlanFeature[]
+  subscriptions Subscription[]
+  users         User[]
+
+  deletedAt DateTime? @db.Timestamp()
+
+  @@map("plans")
+}
+
+model PlanFeature {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  isActive    Boolean   @default(true)
+  deletedAt   DateTime? @db.Timestamp()
+
+  planId Int
+  plan   Plan @relation(fields: [planId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@map("plan_features")
+}
+
+model Subscription {
+  id       Int    @id @default(autoincrement())
+  subTotal Int
+  total    Int
+  currency String
+  email    String
+  status   String
+
+  userId          Int
+  planId          Int
+  customerId      String
+  invoiceId       String
+  subscriptionId  String
+  expiresAtNumber BigInt
+  expiresAt       DateTime @db.Timestamp()
+  subscribedAt    DateTime @default(now()) @db.Timestamp()
+
+  plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("subscriptions")
+}
+
+model Category {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  icon        String
+
+  careers Career[]
+
+  @@map("categories")
+}
+
+model Career {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  icon        String?
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  users       User[]
+  exams       Exam[]
+
+  @@map("careers")
+}
+
+model Level {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  exams       Exam[]
+
+  @@map("levels")
+}
+
+model Exam {
+  id             Int    @id @default(autoincrement())
+  title          String
+  description    String @db.LongText
+  totalQuestions Int    @db.UnsignedMediumInt
+  duration       Int    @db.UnsignedSmallInt
+  careerId       Int
+  levelId        Int
+  career         Career @relation(fields: [careerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  level          Level  @relation(fields: [levelId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  userExams UserExam[]
+  questions ExamQuestion[]
+  answers   ExamAnswer[]
+
+  @@map("exams")
+}
+
+model UserExam {
+  id             Int       @id @default(autoincrement())
+  userId         Int
+  examId         Int
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  exam           Exam      @relation(fields: [examId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  totalDuration  Int       @db.UnsignedMediumInt
+  totalCorrect   Int       @db.UnsignedMediumInt
+  totalWrong     Int       @db.UnsignedMediumInt
+  totalQuestions Int       @db.UnsignedMediumInt
+  startedAt      DateTime  @db.Timestamp()
+  endedAt        DateTime? @db.Timestamp()
+
+  analyticalModels AnalyticalModel[]
+
+  @@map("user_exams")
+}
+
+model ExamQuestion {
+  id             Int    @id @default(autoincrement())
+  type           String
+  content        Json
+  title          String
+  image          String
+  questionAnswer Json
+  points         Int    @db.SmallInt
+  examId         Int
+
+  exam    Exam                 @relation(fields: [examId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  options ExamQuestionOption[]
+  answers ExamAnswer[]
+
+  @@map("exam_questions")
+}
+
+model ExamQuestionOption {
+  id             Int          @id @default(autoincrement())
+  title          String
+  image          String?
+  isCorrect      Boolean      @default(false)
+  examQuestionId Int
+  examQuestion   ExamQuestion @relation(fields: [examQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  answers        ExamAnswer[]
+
+  @@map("exam_question_options")
+}
+
+model AnalyticalModel {
+  id         Int  @id @default(autoincrement())
+  userId     Int
+  userExamId Int
+  key        Json
+  value      Json
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userExam UserExam @relation(fields: [userExamId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("analytical_models")
+}
+
+model ExamAnswer {
+  id                   Int @id @default(autoincrement())
+  examId               Int
+  userId               Int
+  examQuestionId       Int
+  examQuestionOptionId Int
+
+  isCorrect      Boolean
+  answerDuration Int     @db.UnsignedSmallInt
+
+  exam               Exam               @relation(fields: [examId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  examQuestion       ExamQuestion       @relation(fields: [examQuestionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  examQuestionOption ExamQuestionOption @relation(fields: [examQuestionOptionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("exam_answers")
+}
