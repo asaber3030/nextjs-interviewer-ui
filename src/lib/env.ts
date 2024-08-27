@@ -9,6 +9,7 @@ const envSchema = zod.object({
   STRIPE_SECRET: zod.string(),
   APP_URL: zod.string(),
   API_URL: zod.string(),
+  ADMIN_TOKEN_PASSCODE: zod.string(),
 })
 
 const env = envSchema.parse(process.env)

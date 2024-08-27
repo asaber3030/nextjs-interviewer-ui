@@ -12,9 +12,6 @@ import { getCategories } from "@/actions/categories"
 
 export const CareersMenu = async () => {
   const categories = await getCategories()
-
-  console.log(categories)
-
   return (
     <NavigationMenu className="z-50">
       <NavigationMenuList>

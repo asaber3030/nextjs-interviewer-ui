@@ -1,6 +1,7 @@
 "use client"
 
 import DotPattern from "@/components/magicui/dot-pattern"
+import GridPattern from "@/components/magicui/grid-pattern"
 import SearchApp from "../search-app"
 import StatsNumber from "./number-ticker"
 import Link from "next/link"
@@ -12,7 +13,7 @@ export default function LandingPageBanner() {
   return (
     <div className="relative flex h-[95dvh] w-full flex-col justify-center items-center py-10 overflow-hidden rounded-lg border">
       <section className="text-center xl:w-3/4">
-        <h1 className="whitespace-pre-wrap text-center z-10 xl:text-6xl text-lg font-extrabold tracking-tighter text-black dark:text-white bg-gradient-to-r from-[#203A43] via-[#203A43] to-[#3fada8] inline-block text-transparent bg-clip-text">
+        <h1 className="whitespace-pre-wrap text-center z-10 xl:text-6xl text-3xl font-extrabold tracking-tighter text-black dark:text-white bg-gradient-to-r from-[#203A43] via-[#203A43] to-[#3fada8] inline-block text-transparent bg-clip-text">
           We Have Better Solutions, Career Planning For Your Next Interview
           Trip!
         </h1>
@@ -48,10 +49,10 @@ export default function LandingPageBanner() {
         <StatsNumber num={150} label="Exams" />
       </section>
 
-      <DotPattern
+      <GridPattern
         className={cn(
-          "[mask-image:radial-gradient(1200px_circle_at_center,red,transparent)]",
-          "inset-x-0 inset-y-[-30%] h-[200%]"
+          "[mask-image:radial-gradient(2000px_circle_at_center,red,transparent)]",
+          "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12"
         )}
       />
     </div>
