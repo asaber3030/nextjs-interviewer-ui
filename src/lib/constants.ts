@@ -1,4 +1,7 @@
-export const apiURL = "http://localhost:3000/api"
+export const apiURL = "https://interviewer-prep.vercel.app/api"
+
+// https://interviewer-prep.vercel.app/api
+// http://localhost:3000/api
 
 export const userJWTSecret = process.env.USER_JWT_SECRET!
 export const adminJWTSecret = process.env.ADMIN_JWT_SECRET!

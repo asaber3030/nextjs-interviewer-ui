@@ -37,11 +37,12 @@ export async function adminLoginAction(
       expiresIn: "7d",
     })
 
+    cookies().set(adminCookieName, token)
     return actionResponse(responseCodes.ok, "Authorized successfully", {
       token,
     })
   } catch (error) {
-    return actionResponse(responseCodes.ok, "Error", null, error)
+    return actionResponse(responseCodes.serverError, "Error", null, error)
   }
 }
 

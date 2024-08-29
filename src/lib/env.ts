@@ -1,5 +1,3 @@
-"use server"
-
 import zod from "zod"
 
 const envSchema = zod.object({
