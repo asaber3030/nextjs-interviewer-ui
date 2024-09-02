@@ -26,9 +26,7 @@ export async function adminLoginAction(values: zod.infer<typeof AdminSchema.logi
 
     const { password, ...payload } = admin
 
-    const token = jwt.sign(payload, process.env.ADMIN_JWT_SECRET!, {
-      expiresIn: "7d",
-    })
+    const token = jwt.sign(payload, process.env.ADMIN_JWT_SECRET!)
 
     return actionResponse<{ token: string }, null>(responseCodes.ok, "Authorized successfully", {
       token,
