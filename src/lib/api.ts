@@ -70,14 +70,6 @@ export function randomHexColorCode() {
   return colors[Math.floor(Math.random() * 6)]
 }
 
-export function diffForHuman(date: Date) {
-  return moment(date).fromNow()
-}
-
-export function formatDate(date: Date, format: string = "lll") {
-  return moment(date).format(format)
-}
-
 export function createPagination(
   items: SearchParams,
   skipLimit: boolean = false
@@ -96,8 +88,4 @@ export function createPagination(
     take,
     page,
   }
-}
-
-export function formatNumber(num: number) {
-  return (Math.round(num * 100) / 100).toFixed(2)
 }

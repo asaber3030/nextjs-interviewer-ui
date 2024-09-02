@@ -20,7 +20,7 @@ export default async function AdminAuthorizedLayout({ children }: Props) {
         <AdminSidebar />
         <main>
           <AdminNavbar />
-          <div className="xl:pl-[350px]">{children}</div>
+          <div className="xl:pl-[350px] xl:pr-7 py-6 px-4">{children}</div>
         </main>
       </div>
     </AdminAuthProvider>

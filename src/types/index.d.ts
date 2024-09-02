@@ -1,4 +1,4 @@
-import { Admin } from "@prisma/client"
+import { Admin, Plan, PlanFeature } from "@prisma/client"
 
 export type APIResponse<T, P> = {
   message: string
@@ -24,3 +24,5 @@ export type OrderBy = {
 export type TAdmin = Omit<Admin, "password">
 
 export type TAdminSidebar = "full" | "only-icons" | "hidden"
+
+export type FullPlan = Plan & { features: PlanFeature[] }

@@ -1,10 +1,15 @@
 import {
   BriefcaseBusiness,
   CheckCheck,
+  Cog,
   DollarSign,
+  File,
   Home,
   List,
   ListOrdered,
+  MailPlus,
+  Plus,
+  UserPlus,
   Users,
 } from "lucide-react"
 import { adminRoutes } from "./route"
@@ -63,7 +68,7 @@ export const adminSidebarGroups = [
       {
         id: 3,
         label: "Plans",
-        url: adminRoutes.dashboard(),
+        url: adminRoutes.plans(),
         icon: DollarSign,
         items: [
           { id: 1, label: "Do Something", url: adminRoutes.dashboard() },
@@ -118,7 +123,7 @@ export const adminSidebarGroups = [
     ],
   },
   {
-    id: 1,
+    id: 2,
     name: "Monitoring",
     items: [
       {
@@ -136,7 +141,7 @@ export const adminSidebarGroups = [
   },
 
   {
-    id: 1,
+    id: 3,
     name: "Settings",
     items: [
       {
@@ -154,4 +159,89 @@ export const adminSidebarGroups = [
   },
 ]
 
-export const adminSidebarItems = []
+export const adminDashboardShortcuts = [
+  {
+    id: 1,
+    label: "Add User",
+    icon: UserPlus,
+    url: "/",
+  },
+  {
+    id: 2,
+    label: "Add Exam",
+    icon: Plus,
+    url: "/",
+  },
+  {
+    id: 3,
+    label: "Send E-mails",
+    icon: MailPlus,
+    url: "/",
+  },
+  {
+    id: 4,
+    label: "View Subscriptions",
+    icon: DollarSign,
+    url: "/",
+  },
+  {
+    id: 5,
+    label: "App Settings",
+    icon: Cog,
+    url: "/",
+  },
+  {
+    id: 6,
+    label: "Create Sheets",
+    icon: File,
+    url: "/",
+  },
+  {
+    id: 7,
+    label: "Careers",
+    icon: BriefcaseBusiness,
+    url: "/",
+  },
+  {
+    id: 8,
+    label: "Create Category",
+    icon: Plus,
+    url: "/",
+  },
+  {
+    id: 9,
+    label: "Create Level",
+    icon: Plus,
+    url: "/",
+  },
+  {
+    id: 10,
+    label: "Plan Control",
+    icon: CheckCheck,
+    url: "/",
+  },
+  {
+    id: 11,
+    label: "Plan Control",
+    icon: CheckCheck,
+    url: "/",
+  },
+  {
+    id: 12,
+    label: "Plan Control",
+    icon: CheckCheck,
+    url: "/",
+  },
+  {
+    id: 13,
+    label: "Plan Control",
+    icon: CheckCheck,
+    url: "/",
+  },
+  {
+    id: 14,
+    label: "Plan Control",
+    icon: CheckCheck,
+    url: "/",
+  },
+]
