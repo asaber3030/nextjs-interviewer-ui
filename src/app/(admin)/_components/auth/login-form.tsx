@@ -6,14 +6,7 @@ import { useForm } from "react-hook-form"
 import { useMutation } from "@tanstack/react-query"
 
 import { AdminSchema } from "@/schema"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/common/loading-button"
 
@@ -23,6 +16,8 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { responseCodes } from "@/lib/api"
 import { adminRoutes } from "@/lib/route"
+import { setCookie } from "cookies-next"
+import { adminCookieName } from "@/lib/constants"
 
 export const AdminLoginForm = () => {
   const router = useRouter()
@@ -35,11 +30,11 @@ export const AdminLoginForm = () => {
   })
 
   const loginMutation = useMutation({
-    mutationFn: ({ values }: { values: zod.infer<typeof AdminSchema.login> }) =>
-      adminLoginAction(values),
+    mutationFn: ({ values }: { values: zod.infer<typeof AdminSchema.login> }) => adminLoginAction(values),
     onSuccess: (data) => {
       if (data.status === responseCodes.ok) {
         toast.success(data.message)
+        setCookie(adminCookieName, data?.data?.token as string)
         router.push(adminRoutes.dashboard())
         return
       }

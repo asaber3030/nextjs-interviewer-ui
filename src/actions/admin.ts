@@ -12,24 +12,17 @@ import { actionResponse, responseCodes } from "@/lib/api"
 import { adminCookieName } from "@/lib/constants"
 import { cookies } from "next/headers"
 
-export async function adminLoginAction(
-  values: zod.infer<typeof AdminSchema.login>
-) {
+export async function adminLoginAction(values: zod.infer<typeof AdminSchema.login>) {
   try {
     const admin = await db.admin.findUnique({
       where: { email: values.email },
     })
 
-    if (!admin)
-      return actionResponse(responseCodes.notFound, "Admin doesn't exist.")
+    if (!admin) return actionResponse<{ token: undefined }, null>(responseCodes.notFound, "Admin doesn't exist.")
 
-    const comparePasswords = await bcrypt.compare(
-      values.password,
-      admin.password
-    )
+    const comparePasswords = await bcrypt.compare(values.password, admin.password)
 
-    if (!comparePasswords)
-      return actionResponse(responseCodes.unauthorized, "Invalid Password")
+    if (!comparePasswords) return actionResponse<{ token: undefined }, null>(responseCodes.unauthorized, "Invalid Password")
 
     const { password, ...payload } = admin
 
@@ -37,12 +30,11 @@ export async function adminLoginAction(
       expiresIn: "7d",
     })
 
-    cookies().set(adminCookieName, token)
-    return actionResponse(responseCodes.ok, "Authorized successfully", {
+    return actionResponse<{ token: string }, null>(responseCodes.ok, "Authorized successfully", {
       token,
     })
   } catch (error) {
-    return actionResponse(responseCodes.serverError, "Error", null, error)
+    return actionResponse<any, any>(responseCodes.serverError, "Error", null, error)
   }
 }
 
