@@ -1,4 +1,4 @@
-import { Admin, Plan, PlanFeature } from "@prisma/client"
+import { Admin, Plan, PlanFeature, ExamQuestion, ExamQuestionOption } from "@prisma/client"
 
 export type APIResponse<T, P> = {
   message: string
@@ -11,15 +11,17 @@ export type SearchParams = {
   search?: string
   orderBy?: string
   orderType?: string
-  take?: number
+  take?: string
   skipLimit?: boolean
-  page?: number
+  page?: string
 }
 
 export type OrderBy = {
   name: string
   label: string
 }
+
+export type FullQuestion = ExamQuestion & { options: ExamQuestionOption[] }
 
 export type TAdmin = Omit<Admin, "password">
 

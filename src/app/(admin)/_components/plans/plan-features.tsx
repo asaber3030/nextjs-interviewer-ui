@@ -4,9 +4,10 @@ import { diffForHuman } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Edit, Trash } from "lucide-react"
 
-import DeleteFeatureModal from "./features/delete-feature-dialog"
-import RestoreFeatureModal from "./features/restore-feature-dialog"
 import UpdateFeatureModal from "./features/update-feature-dialog"
+import { DeleteModal } from "../ui/delete-modal"
+import { RestoreModal } from "../ui/restore-modal"
+import { forceDeletePlanFeatureAction, restorePlanFeatureAction, softDeletePlanFeatureAction } from "@/actions/plans"
 
 type Props = {
   features: PlanFeature[]
@@ -37,7 +38,7 @@ const DisplayPlanFeatures = ({ features }: Props) => {
               <TableCell>
                 <div className="flex gap-2">
                   <UpdateFeatureModal feature={feature} />
-                  {feature.deletedAt ? <RestoreFeatureModal featureId={feature.id} /> : <DeleteFeatureModal featureId={feature.id} />}
+                  {!feature.deletedAt ? <DeleteModal id={feature.id} softAction={softDeletePlanFeatureAction} forceAction={forceDeletePlanFeatureAction} /> : <RestoreModal id={feature.id} action={restorePlanFeatureAction} />}
                 </div>
               </TableCell>
             </TableRow>

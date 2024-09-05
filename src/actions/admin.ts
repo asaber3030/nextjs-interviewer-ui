@@ -17,11 +17,9 @@ export async function adminLoginAction(values: zod.infer<typeof AdminSchema.logi
     const admin = await db.admin.findUnique({
       where: { email: values.email },
     })
-
     if (!admin) return actionResponse<{ token: undefined }, null>(responseCodes.notFound, "Admin doesn't exist.")
 
     const comparePasswords = await bcrypt.compare(values.password, admin.password)
-
     if (!comparePasswords) return actionResponse<{ token: undefined }, null>(responseCodes.unauthorized, "Invalid Password")
 
     const { password, ...payload } = admin

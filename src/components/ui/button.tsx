@@ -17,7 +17,7 @@ const buttonVariants = cva("inline-flex items-center gap-2 justify-center whites
       link: "text-primary underline-offset-4 hover:underline",
       "outline-destructive": "border border-red-500 bg-background hover:bg-red-100 text-red-700",
       "outline-blue": "border border-blue-500 bg-background hover:bg-blue-100 text-blue-700",
-      "outline-success": "border border-green-500 bg-background hover:bg-green-100 text-green-700",
+      "outline-success": "border border-green-600 bg-background hover:bg-green-50 text-green-700",
       "outline-default": "bg-transparent border border-secondaryMain text-secondaryMain hover:bg-secondaryMain/20",
     },
     size: {

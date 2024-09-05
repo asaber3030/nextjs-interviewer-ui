@@ -52,8 +52,7 @@ export default function UpdateFeatureModal({ feature }: Props) {
       </DialogTrigger>
       <DialogContent className="bg-white">
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
-          <DialogDescription>This action cannot be undone. This will permanently delete your account and remove your data from our servers.</DialogDescription>
+          <DialogTitle>Update Plan Feature</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleUpdate)} className="space-y-4">

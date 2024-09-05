@@ -1,5 +1,5 @@
 import { FullPlan } from "@/types"
-import { Check, Edit, X } from "lucide-react"
+import { ArrowUp01, BriefcaseBusiness, Check, Edit, FileQuestionIcon, X } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -26,6 +26,43 @@ export default function AdminPlanCard({ plan, showActions = true }: Props) {
         <p className="text-muted-foreground text-sm mt-4">{plan.description}</p>
       </div>
       <div className="grid gap-4 h-fit mt-2">
+        <div className="flex items-center gap-4">
+          <div className="grid place-content-center bg-gray-50 p-2 rounded-md border">
+            <ArrowUp01 className="w-6 h-6 text-primary" />
+          </div>
+
+          <div>
+            <h4 className={cn("font-medium")}>Number Of Levels</h4>
+            <p className={cn("text-muted-foreground text-sm")}>
+              <span className="text-orange-500 font-bold">x{plan.numberOfLevels}</span> Levels
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="grid place-content-center bg-gray-50 p-2 rounded-md border">
+            <FileQuestionIcon className="w-6 h-6 text-primary" />
+          </div>
+
+          <div>
+            <h4 className={cn("font-medium")}>Number Of Questions</h4>
+            <p className={cn("text-muted-foreground text-sm")}>
+              <span className="text-orange-500 font-bold">x{plan.numberOfQuestions}</span> Questions
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="grid place-content-center bg-gray-50 p-2 rounded-md border">
+            <BriefcaseBusiness className="w-6 h-6 text-primary" />
+          </div>
+
+          <div>
+            <h4 className={cn("font-medium")}>Number Of Positions</h4>
+            <p className={cn("text-muted-foreground text-sm")}>
+              <span className="text-orange-500 font-bold">x{plan.numberOfQuestions}</span> Positions
+            </p>
+          </div>
+        </div>
+
         {plan.features.map((feature) => (
           <div className="flex items-center gap-4" key={feature.id}>
             {!feature.deletedAt && feature.isActive ? (

@@ -4,11 +4,18 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_HOST")
+  url      = env("DATABASE_LOCAL")
 }
 
 // DATABASE_LOCAL
 // DATABASE_HOST
+
+enum QuestionType {
+  TF
+  Multiple
+  Single
+  Text
+}
 
 model Admin {
   id       Int    @id @default(autoincrement())
@@ -98,8 +105,8 @@ model Subscription {
   invoiceId       String
   subscriptionId  String
   expiresAtNumber BigInt
-  expiresAt       DateTime @db.Timestamp()
-  subscribedAt    DateTime @db.Timestamp()
+  expiresAt       DateTime? @db.Timestamp()
+  subscribedAt    DateTime? @db.Timestamp()
 
   plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   User User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -114,6 +121,7 @@ model Category {
   icon        String
 
   careers Career[]
+  deletedAt DateTime? @db.Timestamp()
 
   @@map("categories")
 }
@@ -127,6 +135,8 @@ model Career {
   category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   users       User[]
   exams       Exam[]
+  levels      Level[]
+  deletedAt DateTime? @db.Timestamp()
 
   @@map("careers")
 }
@@ -135,6 +145,9 @@ model Level {
   id          Int    @id @default(autoincrement())
   name        String
   description String
+  careerId    Int
+  deletedAt   DateTime? @db.Timestamp()
+  career      Career @relation(fields: [careerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   exams       Exam[]
 
   @@map("levels")
@@ -150,12 +163,22 @@ model Exam {
   levelId        Int
   career         Career @relation(fields: [careerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   level          Level  @relation(fields: [levelId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userExams      UserExam[]
+  questions      ExamQuestion[]
+  answers        ExamAnswer[]
+  outlines       ExamOutline[]
 
-  userExams UserExam[]
-  questions ExamQuestion[]
-  answers   ExamAnswer[]
+  deletedAt DateTime? @db.Timestamp()
 
   @@map("exams")
+}
+
+model ExamOutline {
+  id             Int       @id @default(autoincrement())
+  title          String
+  description    String? @db.LongText
+  examId         Int
+  exam           Exam      @relation(fields: [examId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model UserExam {
@@ -178,11 +201,12 @@ model UserExam {
 
 model ExamQuestion {
   id             Int    @id @default(autoincrement())
-  type           String
-  content        Json
   title          String
-  image          String
-  questionAnswer Json
+  content        String
+  type           QuestionType @default(Text)
+  image          String?
+  questionAnswer String
+  order          Int @db.SmallInt @default(1)
   points         Int    @db.SmallInt
   examId         Int
 

@@ -1,17 +1,4 @@
-import {
-  BriefcaseBusiness,
-  CheckCheck,
-  Cog,
-  DollarSign,
-  File,
-  Home,
-  List,
-  ListOrdered,
-  MailPlus,
-  Plus,
-  UserPlus,
-  Users,
-} from "lucide-react"
+import { BriefcaseBusiness, CheckCheck, Cog, DollarSign, File, FileQuestion, Home, List, ListOrdered, MailPlus, Plus, UserPlus, Users } from "lucide-react"
 import { adminRoutes } from "./route"
 
 export const solutionsMenuItems = [
@@ -19,22 +6,19 @@ export const solutionsMenuItems = [
     id: 1,
     url: "/",
     label: "Interviews",
-    description:
-      "We provide relible interviews preparation process for your next interview at any tech company.",
+    description: "We provide relible interviews preparation process for your next interview at any tech company.",
   },
   {
     id: 2,
     url: "/",
     label: "Quizzes",
-    description:
-      "Fast quizzes to test your self on your current studying career. We also provide different difficulty levels for quizzes.",
+    description: "Fast quizzes to test your self on your current studying career. We also provide different difficulty levels for quizzes.",
   },
   {
     id: 3,
     url: "/",
     label: "Documentation",
-    description:
-      "We provide simple documentation for position interview and simple outlines.",
+    description: "We provide simple documentation for position interview and simple outlines.",
   },
 ]
 
@@ -90,7 +74,7 @@ export const adminSidebarGroups = [
       {
         id: 5,
         label: "Categories",
-        url: adminRoutes.dashboard(),
+        url: adminRoutes.categories(),
         icon: List,
         items: [
           { id: 1, label: "Do Something", url: adminRoutes.dashboard() },
@@ -101,7 +85,7 @@ export const adminSidebarGroups = [
       {
         id: 6,
         label: "Careers",
-        url: adminRoutes.dashboard(),
+        url: adminRoutes.careers(),
         icon: BriefcaseBusiness,
         items: [
           { id: 1, label: "Do Something", url: adminRoutes.dashboard() },
@@ -112,8 +96,19 @@ export const adminSidebarGroups = [
       {
         id: 7,
         label: "Levels",
-        url: adminRoutes.dashboard(),
+        url: adminRoutes.levels(),
         icon: ListOrdered,
+        items: [
+          { id: 1, label: "Do Something", url: adminRoutes.dashboard() },
+          { id: 2, label: "Do Something", url: adminRoutes.dashboard() },
+          { id: 3, label: "Do Something", url: adminRoutes.dashboard() },
+        ],
+      },
+      {
+        id: 8,
+        label: "Exams",
+        url: adminRoutes.exams(),
+        icon: FileQuestion,
         items: [
           { id: 1, label: "Do Something", url: adminRoutes.dashboard() },
           { id: 2, label: "Do Something", url: adminRoutes.dashboard() },
@@ -127,7 +122,7 @@ export const adminSidebarGroups = [
     name: "Monitoring",
     items: [
       {
-        id: 1,
+        id: 9,
         label: "Dashboard",
         url: adminRoutes.dashboard(),
         icon: Home,
@@ -145,7 +140,7 @@ export const adminSidebarGroups = [
     name: "Settings",
     items: [
       {
-        id: 1,
+        id: 10,
         label: "Dashboard",
         url: adminRoutes.dashboard(),
         icon: Home,

@@ -1,12 +1,6 @@
 import { Control } from "react-hook-form"
 import { Input } from "../ui/input"
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form"
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Textarea } from "../ui/textarea"
 
 type Props = {
@@ -17,19 +11,10 @@ type Props = {
   type?: string
   register?: any
   placeholder?: string
-  defaultValue?: string
+  defaultValue?: string | number
 }
 
-export const InputField = ({
-  name,
-  label,
-  isTextarea = false,
-  placeholder,
-  type,
-  control,
-  register,
-  defaultValue,
-}: Props) => {
+export const InputField = ({ name, label, isTextarea = false, placeholder, type, control, register, defaultValue }: Props) => {
   return (
     <FormField
       control={control}
@@ -39,22 +24,11 @@ export const InputField = ({
           <FormLabel>{label}</FormLabel>
           <FormControl>
             {isTextarea ? (
-              <Textarea
-                className="bg-white focus:border-orange-300 resize-none h-32"
-                placeholder={placeholder}
-                {...field}
-              >
+              <Textarea className="bg-white focus:border-orange-300 resize-none h-32" placeholder={placeholder} {...field}>
                 {defaultValue}
               </Textarea>
             ) : (
-              <Input
-                className="bg-white focus:border-orange-300"
-                type={type}
-                placeholder={placeholder}
-                defaultValue={defaultValue}
-                {...field}
-                {...register}
-              />
+              <Input className="bg-white focus:border-orange-300" type={type} placeholder={placeholder} defaultValue={defaultValue} {...field} {...register} />
             )}
           </FormControl>
           <FormMessage />

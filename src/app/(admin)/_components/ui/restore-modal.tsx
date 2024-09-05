@@ -3,23 +3,25 @@
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 
-import { restorePlanFeatureAction } from "@/actions/plans"
 import { toast } from "sonner"
 
 import { LoadingButton } from "@/components/common/loading-button"
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Trash } from "lucide-react"
+import { Trash, Undo } from "lucide-react"
+import { APIResponse } from "@/types"
 
 type Props = {
-  featureId: number
+  title?: string
+  id: number
+  action: (id: number) => Promise<APIResponse<any, any>>
 }
 
-const RestoreFeatureModal = ({ featureId }: Props) => {
+export const RestoreModal = ({ id, action, title = "Restore Action" }: Props) => {
   const [open, setOpen] = useState(false)
 
   const restoreMutation = useMutation({
-    mutationFn: () => restorePlanFeatureAction(featureId),
+    mutationFn: () => action(id),
     onSuccess: (data) => {
       toast.message(data.message)
       setOpen(false)
@@ -35,15 +37,16 @@ const RestoreFeatureModal = ({ featureId }: Props) => {
       <DialogTrigger>
         <Button size="sm" variant="outline-blue" asChild>
           <span className="flex gap-2 items-center">
-            <Trash className="size-4" /> Restore
+            <Undo className="size-4" />
           </span>
         </Button>
       </DialogTrigger>
+
       <DialogContent className="bg-white">
         <DialogHeader>
-          <DialogTitle>Are you sure?</DialogTitle>
-          <DialogDescription>This action can be reversed later because of soft deletes but you can force delete this item.</DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
+
         <DialogFooter>
           <DialogClose className="border rounded-md px-4 hover:bg-gray-50 font-semibold text-sm">Close</DialogClose>
           <LoadingButton loading={restoreMutation.isPending} variant="outline-blue" onClick={handleRestore}>
@@ -54,5 +57,3 @@ const RestoreFeatureModal = ({ featureId }: Props) => {
     </Dialog>
   )
 }
-
-export default RestoreFeatureModal

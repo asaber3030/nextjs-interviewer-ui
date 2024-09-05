@@ -42,6 +42,7 @@ export default function CreateFeatureModal({ planId }: Props) {
       if (data?.status === responseCodes.ok) {
         toast.success(data.message)
         setOpen(false)
+        form.reset()
       } else {
         toast.error(data.message)
         return
@@ -65,10 +66,6 @@ export default function CreateFeatureModal({ planId }: Props) {
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-white">
-        <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
-          <DialogDescription>This action cannot be undone. This will permanently delete your account and remove your data from our servers.</DialogDescription>
-        </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleCreate)} className="space-y-4">
             <InputField control={form.control} name="name" label="Feature Name" />

@@ -3,30 +3,35 @@
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 
-import { forceDeletePlanFeatureAction, softDeletePlanFeatureAction } from "@/actions/plans"
 import { toast } from "sonner"
 
 import { LoadingButton } from "@/components/common/loading-button"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Trash } from "lucide-react"
+import { APIResponse } from "@/types"
 
 type Props = {
-  featureId: number
+  buttonLabel?: string
+  title?: string
+  description?: string
+  id: number
+  softAction: (id: number) => Promise<APIResponse<any, any>>
+  forceAction: (id: number) => Promise<APIResponse<any, any>>
 }
 
-const DeleteFeatureModal = ({ featureId }: Props) => {
+export const DeleteModal = ({ id, buttonLabel, softAction, forceAction, title = "Delete Action", description = "This action can be reversed later because of soft deletes but you can force delete this item." }: Props) => {
   const [open, setOpen] = useState(false)
 
   const forceDeleteMutation = useMutation({
-    mutationFn: () => forceDeletePlanFeatureAction(featureId),
+    mutationFn: () => forceAction(id),
     onSuccess: (data) => {
       toast.message(data.message)
       setOpen(false)
     },
   })
   const softDeleteMutation = useMutation({
-    mutationFn: () => softDeletePlanFeatureAction(featureId),
+    mutationFn: () => softAction(id),
     onSuccess: (data) => {
       toast.message(data.message)
       setOpen(false)
@@ -42,30 +47,27 @@ const DeleteFeatureModal = ({ featureId }: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <Button size="sm" variant="outline-destructive" asChild>
-          <span className="flex gap-2 items-center">
-            <Trash className="size-4" /> Delete
-          </span>
+      <DialogTrigger asChild>
+        <Button size="sm" variant="outline-destructive">
+          <Trash className="size-4" />
+          {buttonLabel && buttonLabel}
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-white">
         <DialogHeader>
-          <DialogTitle>Are you sure?</DialogTitle>
-          <DialogDescription>This action can be reversed later because of soft deletes but you can force delete this item.</DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose className="border rounded-md px-4 hover:bg-gray-50 font-semibold text-sm">Close</DialogClose>
-          <LoadingButton loading={forceDeleteMutation.isPending} variant="destructive" onClick={handleForceDelete}>
-            Force Delete
-          </LoadingButton>
           <LoadingButton loading={softDeleteMutation.isPending} variant="outline-destructive" onClick={handleSoftDelete}>
             Delete
+          </LoadingButton>
+          <LoadingButton loading={forceDeleteMutation.isPending} variant="destructive" onClick={handleForceDelete}>
+            Force Delete
           </LoadingButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   )
 }
-
-export default DeleteFeatureModal
