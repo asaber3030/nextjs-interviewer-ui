@@ -27,7 +27,7 @@ type Props = {
   careers: Career[]
 }
 
-export function UpdateExamForm({ exam, careers }: Props) {
+export function CreateExamForm({ exam, careers }: Props) {
   const [selectedCareerId, setSelectedCareerId] = useState(exam.careerId)
   const [selectedLevelId, setSelectedLevelId] = useState<number | null>(exam.levelId)
 

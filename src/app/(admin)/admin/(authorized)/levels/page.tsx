@@ -20,6 +20,7 @@ import { SearchParams } from "@/types"
 import FilterAll from "@/app/(admin)/_components/ui/filter"
 import PageTitle from "@/app/(admin)/_components/ui/title"
 import Link from "next/link"
+import EmptyStateCard from "@/components/common/empty-state"
 
 export const metadata: Metadata = {
   title: "Levels",
@@ -54,7 +55,7 @@ export default async function LevelsPage({ searchParams }: Props) {
       <FilterAll parentClassName="grid grid-cols-4 gap-2" orderByArray={orderBy} searchParams={searchParams} />
 
       {levels.length == 0 ? (
-        <NoDataAlert title="No data to show" />
+        <EmptyStateCard />
       ) : (
         <Table className="mt-4">
           <TableHeader>

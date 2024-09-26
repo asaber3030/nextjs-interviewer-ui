@@ -1,71 +1,63 @@
-import db from "@/services/prisma";
-import Image from "next/image";
+import db from "@/services/prisma"
+import moment from "moment"
 
-import { createPagination } from "@/lib/utils";
-import { adminRoutes } from "@/lib/route";
+import Image from "next/image"
+import FilterAll from "@/app/(admin)/_components/ui/filter"
+import PageTitle from "@/app/(admin)/_components/ui/title"
+import Link from "next/link"
 
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { PaginateNext } from "@/app/(admin)/_components/ui/pagination/paginate-next";
-import { PaginatePrevious } from "@/app/(admin)/_components/ui/pagination/paginate-previous";
-import { SearchParams } from "@/types";
-import { NoDataAlert } from "@/app/(admin)/_components/ui/no-data";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Mail, MoreHorizontal, Printer, User } from "lucide-react";
-import { Metadata } from "next";
+import { createPagination } from "@/lib/utils"
+import { adminRoutes } from "@/lib/route"
 
-import FilterAll from "@/app/(admin)/_components/ui/filter";
-import PageTitle from "@/app/(admin)/_components/ui/title";
-import Link from "next/link";
-import moment from "moment";
-import { getPlans } from "@/actions/plans";
-import { CreateUserModal } from "@/app/(admin)/_components/users/create-user-modal";
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { PaginateNext } from "@/app/(admin)/_components/ui/pagination/paginate-next"
+import { PaginatePrevious } from "@/app/(admin)/_components/ui/pagination/paginate-previous"
+import { SearchParams } from "@/types"
+import { NoDataAlert } from "@/app/(admin)/_components/ui/no-data"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Mail, MoreHorizontal, Printer, User } from "lucide-react"
+import { Metadata } from "next"
+
+import { getPlans } from "@/actions/plans"
+import { CreateUserModal } from "@/app/(admin)/_components/users/create-user-modal"
+import EmptyStateCard from "@/components/common/empty-state"
 
 type Props = {
-  searchParams: SearchParams;
-};
+  searchParams: SearchParams
+}
 
 export const metadata: Metadata = {
   title: "Users",
-};
+}
 
 export default async function UsersPage({ searchParams }: Props) {
   const orderBy = [
     { label: "ID", name: "id" },
     { label: "Name", name: "name" },
-  ];
+  ]
 
-  const pagination = createPagination(searchParams);
-  const plans = await getPlans();
-  const careers = await db.career.findMany();
+  const pagination = createPagination(searchParams)
+  const plans = await getPlans()
+  const careers = await db.career.findMany()
 
   const users = await db.user.findMany({
     orderBy: { [pagination.orderBy ?? "id"]: pagination.orderType ?? "asc" },
     skip: pagination.skip,
     take: pagination.take,
-  });
+  })
 
   return (
     <>
-      <PageTitle
-        title="Users"
-        parentClassName="mb-4"
-      >
-        <CreateUserModal
-          plans={plans}
-          careers={careers}
-        />
+      <PageTitle title="Users" parentClassName="mb-4">
+        <CreateUserModal plans={plans} careers={careers} />
       </PageTitle>
 
-      <FilterAll
-        parentClassName="grid grid-cols-4 gap-2"
-        orderByArray={orderBy}
-        searchParams={searchParams}
-      />
+      <FilterAll parentClassName="grid grid-cols-4 gap-2" orderByArray={orderBy} searchParams={searchParams} />
 
       {users.length == 0 ? (
-        <NoDataAlert title="No data to show" />
+        <EmptyStateCard />
       ) : (
         <Table className="mt-4">
           <TableHeader>
@@ -84,13 +76,7 @@ export default async function UsersPage({ searchParams }: Props) {
               <TableRow key={user.id}>
                 <TableCell className="font-medium">{user.id}</TableCell>
                 <TableCell>
-                  <Image
-                    className="rounded-md"
-                    src={user.image ? user.image : "/images/defaults/user.svg"}
-                    alt={user.name}
-                    width={32}
-                    height={32}
-                  />
+                  <Image className="rounded-md" src={user.image ? user.image : "/images/defaults/user.svg"} alt={user.name} width={32} height={32} />
                 </TableCell>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>@{user.username}</TableCell>
@@ -98,10 +84,7 @@ export default async function UsersPage({ searchParams }: Props) {
                 <TableCell>{user.lastLogin ? moment(user.lastLogin).fromNow() : <Badge variant="destructive">Not Available</Badge>}</TableCell>
                 <TableCell className="flex gap-1">
                   <Link href={adminRoutes.viewUser(user.id)}>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                    >
+                    <Button variant="outline" size="sm">
                       <User className="size-4" />
                       View
                     </Button>
@@ -109,10 +92,7 @@ export default async function UsersPage({ searchParams }: Props) {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Link href={adminRoutes.viewUser(user.id)}>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                        >
+                        <Button variant="outline" size="sm">
                           <MoreHorizontal className="size-4" />
                         </Button>
                       </Link>
@@ -149,5 +129,5 @@ export default async function UsersPage({ searchParams }: Props) {
         </Table>
       )}
     </>
-  );
+  )
 }

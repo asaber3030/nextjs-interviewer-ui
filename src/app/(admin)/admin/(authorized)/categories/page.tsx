@@ -20,6 +20,7 @@ import Link from "next/link"
 import { adminRoutes } from "@/lib/route"
 import { Button } from "@/components/ui/button"
 import { Eye } from "lucide-react"
+import EmptyStateCard from "@/components/common/empty-state"
 
 type Props = {
   searchParams: SearchParams
@@ -52,52 +53,55 @@ export default async function CategoriesPage({ searchParams }: Props) {
       </PageTitle>
 
       <FilterAll parentClassName="grid grid-cols-4 gap-2" orderByArray={orderBy} searchParams={searchParams} />
+      {categories.length === 0 ? (
+        <EmptyStateCard />
+      ) : (
+        <Table className="mt-4">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">ID</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Icon</TableHead>
+              <TableHead>Careers</TableHead>
+              <TableHead>Action</TableHead>
+            </TableRow>
+          </TableHeader>
 
-      <Table className="mt-4">
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">ID</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Icon</TableHead>
-            <TableHead>Careers</TableHead>
-            <TableHead>Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        {categories.length === 0 && <div>No data to show!</div>}
-        <TableBody>
-          {categories.map((category) => (
-            <TableRow key={category.id}>
-              <TableCell className="font-medium">{category.id}</TableCell>
-              <TableCell className="font-medium">{category.name}</TableCell>
-              <TableCell>
-                <Image src={category.icon} width={40} height={40} alt="Category Icon" />
+          <TableBody>
+            {categories.map((category) => (
+              <TableRow key={category.id}>
+                <TableCell className="font-medium">{category.id}</TableCell>
+                <TableCell className="font-medium">{category.name}</TableCell>
+                <TableCell>
+                  <Image src={category.icon} width={40} height={40} alt="Category Icon" />
+                </TableCell>
+                <TableCell>
+                  <Badge>{category._count.careers} careers</Badge>
+                </TableCell>
+                <TableCell className="flex gap-2">
+                  <UpdateCategoryModal category={category} />
+                  {!category.deletedAt ? <DeleteModal id={category.id} softAction={softDeleteCategoryAction} forceAction={forceDeleteCategoryAction} /> : <RestoreModal id={category.id} action={restoreCategoryAction} />}
+                  <Link href={adminRoutes.viewCategory(category.id)}>
+                    <Button variant="outline-default" size="sm">
+                      <Eye className="size-4" />
+                    </Button>
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={4}>
+                <PaginatePrevious />
               </TableCell>
-              <TableCell>
-                <Badge>{category._count.careers} careers</Badge>
-              </TableCell>
-              <TableCell className="flex gap-2">
-                <UpdateCategoryModal category={category} />
-                {!category.deletedAt ? <DeleteModal id={category.id} softAction={softDeleteCategoryAction} forceAction={forceDeleteCategoryAction} /> : <RestoreModal id={category.id} action={restoreCategoryAction} />}
-                <Link href={adminRoutes.viewCategory(category.id)}>
-                  <Button variant="outline-default" size="sm">
-                    <Eye className="size-4" />
-                  </Button>
-                </Link>
+              <TableCell className="text-right">
+                <PaginateNext />
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={4}>
-              <PaginatePrevious />
-            </TableCell>
-            <TableCell className="text-right">
-              <PaginateNext />
-            </TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+          </TableFooter>
+        </Table>
+      )}
     </div>
   )
 }

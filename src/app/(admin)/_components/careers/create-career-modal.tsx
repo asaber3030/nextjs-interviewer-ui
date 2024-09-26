@@ -34,7 +34,7 @@ export function CreateCareerModal({ categories }: Props) {
     defaultValues: {
       name: "",
       description: "",
-      categoryId: String(categories[0].id),
+      categoryId: String(categories[0]?.id ?? ""),
     },
   })
 

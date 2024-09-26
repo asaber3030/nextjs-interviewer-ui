@@ -40,7 +40,7 @@ export function CreateLevelModal({ careers, defaultCareerId, buttonClassName, la
     defaultValues: {
       name: "",
       description: "",
-      careerId: defaultCareerId ? String(defaultCareerId) : String(careers[0].id),
+      careerId: defaultCareerId ? String(defaultCareerId) : String(careers[0]?.id),
     },
   })
 

@@ -8,6 +8,7 @@ import { SearchFilter } from "@/app/(admin)/_components/ui/filter/search"
 import { Metadata } from "next"
 
 import db from "@/services/prisma"
+import EmptyStateCard from "@/components/common/empty-state"
 
 type Props = {
   searchParams: SearchParams
@@ -33,6 +34,8 @@ export default async function ExamsPage({ searchParams }: Props) {
         <SearchFilter searchParams={searchParams} />
       </PageTitle>
 
+      {categories.length === 0 && <EmptyStateCard />}
+
       {categories.map((category) => (
         <div className="mt-2">
           <div className="mb-2">
@@ -42,7 +45,7 @@ export default async function ExamsPage({ searchParams }: Props) {
             <p className="text-gray-500 text-xs">{category.description}</p>
           </div>
           {category.careers.length === 0 ? (
-            <NoDataAlert title="No careers available." />
+            <EmptyStateCard />
           ) : (
             <section className="grid xl:grid-cols-5 md:grid-cols-4 grid-cols-1 gap-1 mb-6">
               {category.careers.map((career) => (

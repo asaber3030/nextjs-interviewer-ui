@@ -22,6 +22,7 @@ import FilterAll from "@/app/(admin)/_components/ui/filter"
 import PageTitle from "@/app/(admin)/_components/ui/title"
 import Image from "next/image"
 import Link from "next/link"
+import EmptyStateCard from "@/components/common/empty-state"
 
 type Props = {
   searchParams: SearchParams
@@ -56,7 +57,7 @@ export default async function CareersPage({ searchParams }: Props) {
       <FilterAll parentClassName="grid grid-cols-4 gap-2" orderByArray={orderBy} searchParams={searchParams} />
 
       {careers.length == 0 ? (
-        <NoDataAlert title="No data to show" />
+        <EmptyStateCard />
       ) : (
         <Table className="mt-4">
           <TableHeader>
