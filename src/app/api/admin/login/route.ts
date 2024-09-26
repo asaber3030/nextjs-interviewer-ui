@@ -5,7 +5,8 @@ import jwt from "jsonwebtoken"
 import { cookies } from "next/headers"
 
 import { adminCookieName, adminJWTSecret } from "@/lib/constants"
-import { response, extractErrors, responseCodes } from "@/lib/api"
+import { response, responseCodes } from "@/lib/api"
+import { extractErrors } from "@/lib/utils"
 
 import { AdminSchema } from "@/schema"
 import { NextRequest, NextResponse } from "next/server"
@@ -24,17 +25,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
   })
   if (!findUser) return response(responseCodes.notFound, "Admin doesn't exist.")
 
-  const comparePassword = await bcrypt.compare(
-    parsedData.data.password,
-    findUser.password
-  )
-  if (!comparePassword)
-    return response(responseCodes.notFound, "Invalid password.")
+  const comparePassword = await bcrypt.compare(parsedData.data.password, findUser.password)
+  if (!comparePassword) return response(responseCodes.notFound, "Invalid password.")
 
   const { password, ...user } = findUser
 
   const token = jwt.sign(user, adminJWTSecret, {
-    expiresIn: "30 days",
+    expiresIn: "30d",
   })
   cookies().set(adminCookieName, token)
   return response(responseCodes.ok, "Authorized Successfully", { token })

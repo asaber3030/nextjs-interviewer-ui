@@ -12,17 +12,22 @@ import { QuestionSchema } from "@/schema"
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { FullQuestion } from "@/types"
+import { ClassValue } from "class-variance-authority/types"
 
+import { updateQuestionAction } from "@/actions/questions"
 import { responseCodes } from "@/lib/api"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
-import { updateQuestionAction } from "@/actions/questions"
+import { cn } from "@/lib/utils"
 
 type Props = {
   question: FullQuestion
+  variant?: any
+  label?: string
+  className?: ClassValue
 }
 
-export function UpdateQuestionModal({ question }: Props) {
+export function UpdateQuestionModal({ label = "Modify", variant = "link", className, question }: Props) {
   const form = useForm({
     resolver: zodResolver(QuestionSchema.update),
   })
@@ -41,8 +46,8 @@ export function UpdateQuestionModal({ question }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="link" className="px-0">
-          Modify
+        <Button variant={variant} className={cn("px-0", className)}>
+          {label}
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-white">

@@ -1,6 +1,5 @@
 "use server"
 
-import bcrypt from "bcrypt"
 import zod from "zod"
 import jwt from "jsonwebtoken"
 import db from "@/services/prisma"
@@ -8,30 +7,22 @@ import db from "@/services/prisma"
 import { AdminSchema } from "@/schema"
 import { Admin } from "@prisma/client"
 
-import { actionResponse, responseCodes } from "@/lib/api"
-import { adminCookieName } from "@/lib/constants"
+import { adminCookieName, apiURL } from "@/lib/constants"
 import { cookies } from "next/headers"
+import { APIResponse } from "@/types"
 
-export async function adminLoginAction(values: zod.infer<typeof AdminSchema.login>) {
-  try {
-    const admin = await db.admin.findUnique({
-      where: { email: values.email },
-    })
-    if (!admin) return actionResponse<{ token: undefined }, null>(responseCodes.notFound, "Admin doesn't exist.")
+type LoginResponseData = { token: string }
 
-    const comparePasswords = await bcrypt.compare(values.password, admin.password)
-    if (!comparePasswords) return actionResponse<{ token: undefined }, null>(responseCodes.unauthorized, "Invalid Password")
-
-    const { password, ...payload } = admin
-
-    const token = jwt.sign(payload, process.env.ADMIN_JWT_SECRET!)
-
-    return actionResponse<{ token: string }, null>(responseCodes.ok, "Authorized successfully", {
-      token,
-    })
-  } catch (error) {
-    return actionResponse<any, any>(responseCodes.serverError, "Error", null, error)
-  }
+export async function adminLoginAction(values: zod.infer<typeof AdminSchema.login>): Promise<APIResponse<LoginResponseData, any>> {
+  const loginRequest = await fetch(`${apiURL}/admin/login`, {
+    method: "POST",
+    body: JSON.stringify(values),
+  })
+  const data = await loginRequest.json()
+  cookies().set(adminCookieName, data?.data?.token, {
+    expires: Date.now() + 24 * 60 * 60 * 1000 * 30,
+  })
+  return data
 }
 
 export async function getAdmin() {

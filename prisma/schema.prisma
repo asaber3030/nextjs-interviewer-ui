@@ -3,12 +3,18 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_LOCAL")
+  provider       = "postgresql"
+  url            = env("DATABASE_HOST")
 }
 
 // DATABASE_LOCAL
 // DATABASE_HOST
+
+enum Priority {
+  Low
+  Medium
+  High
+}
 
 enum QuestionType {
   TF
@@ -38,6 +44,12 @@ model User {
   username String @unique
   password String
 
+  jobTitle        String? @db.VarChar(50)
+  jobDescription  String? @db.VarChar(255)
+  image           String?
+  isActive        Boolean @default(false)
+  isEmailVerified Boolean @default(false)
+
   planId   Int @default(1)
   careerId Int
 
@@ -53,20 +65,60 @@ model User {
   takenExams       UserExam[]
   analyticalModels AnalyticalModel[]
   answers          ExamAnswer[]
-
+  messages         UserMessage[]
+  loginHistory   LoginHistory[]
+  activities   UserActivity[]
+  
   @@map("users")
+}
+
+model UserMessage {
+  id          Int    @id @default(autoincrement())
+  userId      Int
+  priority Priority @default(Low)
+  title String
+  description String
+  createdAt DateTime? @db.Timestamp()
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model LoginHistory {
+  id Int @id @default(autoincrement())
+  userId Int
+  token String
+  client String
+  device String
+  ip String
+  createdAt DateTime? @db.Timestamp()
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model UserActivity {
+  id Int @id @default(autoincrement())
+  userId Int
+  title String
+  description String
+  client String
+  device String
+  ip String
+  url String
+  createdAt DateTime? @db.Timestamp()
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Plan {
   id          Int    @id @default(autoincrement())
   name        String @db.VarChar(50)
   description String
-  oldPrice    Int    @default(0) @db.MediumInt
-  price       Int    @db.MediumInt
-  paymentLink String @default("") @db.LongText
+  oldPrice    Int    @default(0) 
+  price       Int    
+  paymentLink String @default("") 
 
-  numberOfLevels    Int @default(1) @db.TinyInt
-  numberOfPositions Int @default(1) @db.TinyInt
+  numberOfLevels    Int @default(1)
+  numberOfPositions Int @default(1)
   numberOfQuestions Int @default(1) @db.SmallInt
 
   features      PlanFeature[]
@@ -109,7 +161,7 @@ model Subscription {
   subscribedAt    DateTime? @db.Timestamp()
 
   plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  User User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("subscriptions")
 }
@@ -156,9 +208,9 @@ model Level {
 model Exam {
   id             Int    @id @default(autoincrement())
   title          String
-  description    String @db.LongText
-  totalQuestions Int    @db.UnsignedMediumInt
-  duration       Int    @db.UnsignedSmallInt
+  description    String 
+  totalQuestions Int    
+  duration       Int    
   careerId       Int
   levelId        Int
   career         Career @relation(fields: [careerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -176,7 +228,7 @@ model Exam {
 model ExamOutline {
   id             Int       @id @default(autoincrement())
   title          String
-  description    String? @db.LongText
+  description    String? 
   examId         Int
   exam           Exam      @relation(fields: [examId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
@@ -187,10 +239,10 @@ model UserExam {
   examId         Int
   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   exam           Exam      @relation(fields: [examId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  totalDuration  Int       @db.UnsignedMediumInt
-  totalCorrect   Int       @db.UnsignedMediumInt
-  totalWrong     Int       @db.UnsignedMediumInt
-  totalQuestions Int       @db.UnsignedMediumInt
+  totalDuration  Int       
+  totalCorrect   Int       
+  totalWrong     Int       
+  totalQuestions Int       
   startedAt      DateTime  @db.Timestamp()
   endedAt        DateTime? @db.Timestamp()
 
@@ -250,7 +302,7 @@ model ExamAnswer {
   examQuestionOptionId Int
 
   isCorrect      Boolean
-  answerDuration Int     @db.UnsignedSmallInt
+  answerDuration Int     
 
   exam               Exam               @relation(fields: [examId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user               User               @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)

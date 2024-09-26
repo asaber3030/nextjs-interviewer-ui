@@ -16,6 +16,10 @@ import { UpdateCategoryModal, CreateCategoryModal } from "@/app/(admin)/_compone
 import { DeleteModal } from "@/app/(admin)/_components/ui/delete-modal"
 import { RestoreModal } from "@/app/(admin)/_components/ui/restore-modal"
 import { forceDeleteCategoryAction, restoreCategoryAction, softDeleteCategoryAction } from "@/actions/categories"
+import Link from "next/link"
+import { adminRoutes } from "@/lib/route"
+import { Button } from "@/components/ui/button"
+import { Eye } from "lucide-react"
 
 type Props = {
   searchParams: SearchParams
@@ -74,6 +78,11 @@ export default async function CategoriesPage({ searchParams }: Props) {
               <TableCell className="flex gap-2">
                 <UpdateCategoryModal category={category} />
                 {!category.deletedAt ? <DeleteModal id={category.id} softAction={softDeleteCategoryAction} forceAction={forceDeleteCategoryAction} /> : <RestoreModal id={category.id} action={restoreCategoryAction} />}
+                <Link href={adminRoutes.viewCategory(category.id)}>
+                  <Button variant="outline-default" size="sm">
+                    <Eye className="size-4" />
+                  </Button>
+                </Link>
               </TableCell>
             </TableRow>
           ))}

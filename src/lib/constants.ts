@@ -11,3 +11,6 @@ export const adminJWTSecret = process.env.ADMIN_JWT_SECRET!
 export const adminCookieName = "interview-admin-token"
 
 export const adminPasscode = process.env.ADMIN_ADMIN_TOKEN_PASSCODEPASSCODE
+
+export const USER_PICTURE_MAX_FILE_SIZE = 5_120_000
+export const USER_PICTURE_ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"]

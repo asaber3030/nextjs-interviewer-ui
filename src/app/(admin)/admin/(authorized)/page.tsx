@@ -1,21 +1,18 @@
 import React from "react"
 import PageTitle from "../../_components/ui/title"
 import CountCard from "../../_components/dashboard/count-card"
+import ShortcutCard from "../../_components/dashboard/shortcut-card"
+
+import { BriefcaseBusiness, CheckCheck, DollarSign, FileQuestion, LayoutDashboard, List, ListCheck, ShieldQuestion, Users } from "lucide-react"
+import { Metadata } from "next"
 
 import { countTables } from "@/actions/app"
-import {
-  BriefcaseBusiness,
-  CheckCheck,
-  DollarSign,
-  FileQuestion,
-  LayoutDashboard,
-  List,
-  ListCheck,
-  ShieldQuestion,
-  Users,
-} from "lucide-react"
 import { adminDashboardShortcuts } from "@/lib/lists"
-import ShortcutCard from "../../_components/dashboard/shortcut-card"
+import { adminRoutes } from "@/lib/route"
+
+export const metadata: Metadata = {
+  title: "Interviewer - Dashboard",
+}
 
 export default async function AdminHomePage() {
   const counts = await countTables()
@@ -23,7 +20,7 @@ export default async function AdminHomePage() {
     {
       id: 1,
       num: counts.users,
-      url: "",
+      url: adminRoutes.users(),
       label: "Users",
       icon: Users,
       color: "text-orange-700",
@@ -31,7 +28,7 @@ export default async function AdminHomePage() {
     {
       id: 2,
       num: counts.categories,
-      url: "",
+      url: adminRoutes.categories(),
       label: "Categories",
       icon: List,
       color: "text-blue-700",
@@ -39,7 +36,7 @@ export default async function AdminHomePage() {
     {
       id: 3,
       num: counts.exams,
-      url: "",
+      url: adminRoutes.exams(),
       label: "Exams",
       icon: FileQuestion,
       color: "text-yellow-700",
@@ -55,7 +52,7 @@ export default async function AdminHomePage() {
     {
       id: 5,
       num: counts.subscriptions,
-      url: "",
+      url: adminRoutes.subscriptions(),
       label: "Subscriptions",
       icon: DollarSign,
       color: "text-zinc-700",
@@ -71,7 +68,7 @@ export default async function AdminHomePage() {
     {
       id: 7,
       num: counts.careers,
-      url: "",
+      url: adminRoutes.careers(),
       label: "Careers",
       icon: BriefcaseBusiness,
       color: "text-lime-700",

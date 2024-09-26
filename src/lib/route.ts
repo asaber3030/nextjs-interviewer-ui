@@ -7,6 +7,20 @@ export const adminRoutes = {
   login: () => `/admin/login`,
   profile: () => `/admin/profile`,
 
+  subscriptions: () => `/admin/subscriptions`,
+  viewSubscription: (id: number) => `/admin/subscriptions/${id}`,
+
+  users: () => `/admin/users`,
+  viewUser: (id: number) => `/admin/users/${id}`,
+  updateUser: (id: number) => `/admin/users/${id}/update`,
+  userSubscriptions: (id: number) => `/admin/users/${id}/subscriptions`,
+  userMessages: (id: number) => `/admin/users/${id}/messages`,
+  userLoginHistory: (id: number) => `/admin/users/${id}/login-history`,
+  userAnalyticalModels: (id: number) => `/admin/users/${id}/analytical-models`,
+  userTakenExams: (id: number) => `/admin/users/${id}/taken-exams`,
+  userActivities: (id: number) => `/admin/users/${id}/activities`,
+  viewUserTakenExam: (userId: number, examId: number) => `/admin/users/${userId}/taken-exams/${examId}`,
+
   plans: () => `/admin/plans`,
   viewPlan: (id: number) => `/admin/plans/${id}`,
   updatePlan: (id: number) => `/admin/plans/${id}/update`,
@@ -28,4 +42,9 @@ export const adminRoutes = {
   examQuestions: (id: number) => `/admin/exams/${id}/questions`,
   viewQuestion: (examId: number, questionId: number) => `/admin/exams/${examId}/questions/${questionId}`,
   updateExam: (id: number) => `/admin/exams/${id}/update`,
+
+  takenExams: () => `/admin/taken-exams`,
+  viewTakenExam: (id: number) => `/admin/taken-exams/${id}`,
+  updateTakenExam: (id: number) => `/admin/taken-exams/${id}/update`,
+  takenExamQuestions: (id: number) => `/admin/taken-exams/${id}/questions`,
 }

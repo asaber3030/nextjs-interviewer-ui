@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ClassValue } from "class-variance-authority/types"
 import { ArrowRight } from "lucide-react"
+import { build } from "search-params"
 
 type Props = {
   className?: ClassValue

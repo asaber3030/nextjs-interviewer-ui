@@ -1,10 +1,11 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { toast } from "sonner"
-import { SearchParams } from "@/types"
+import { APIResponse, SearchParams } from "@/types"
 import { ZodError } from "zod"
 
 import moment from "moment"
+import { responseCodes } from "./api"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -43,6 +44,16 @@ export function randomHexColorCode() {
   return colors[Math.floor(Math.random() * 6)]
 }
 
+export function generatePassword() {
+  var length = 8,
+    charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+    retVal = ""
+  for (var i = 0, n = charset.length; i < length; ++i) {
+    retVal += charset.charAt(Math.floor(Math.random() * n))
+  }
+  return retVal
+}
+
 export function createPagination(params: SearchParams, skipLimit: boolean = false) {
   const numPage = Number(params.page)
   const page = isNaN(numPage) ? 1 : numPage
@@ -62,4 +73,23 @@ export function createPagination(params: SearchParams, skipLimit: boolean = fals
     take,
     page,
   }
+}
+
+export function showResponseMessage<T, P>(data: APIResponse<T, P>, exectue?: Function) {
+  if (data?.status === responseCodes.ok) {
+    toast.success(data.message)
+    if (exectue) exectue()
+  } else {
+    toast.error(data.message)
+  }
+}
+
+export function formatDuration(seconds: number) {
+  const minutes = Math.floor(seconds / 60)
+  const remainingSeconds = seconds % 60
+  return `${minutes}m ${remainingSeconds}s`
+}
+
+export function formatScore(score: number) {
+  return `${score.toFixed(2)}%`
 }

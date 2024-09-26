@@ -9,12 +9,14 @@ type Props = {
   isTextarea?: boolean
   control: Control<any, any>
   type?: string
+  disabled?: boolean
+  value?: string
   register?: any
   placeholder?: string
   defaultValue?: string | number
 }
 
-export const InputField = ({ name, label, isTextarea = false, placeholder, type, control, register, defaultValue }: Props) => {
+export const InputField = ({ name, disabled, label, isTextarea = false, placeholder, type, control, register, defaultValue, value }: Props) => {
   return (
     <FormField
       control={control}
@@ -24,11 +26,11 @@ export const InputField = ({ name, label, isTextarea = false, placeholder, type,
           <FormLabel>{label}</FormLabel>
           <FormControl>
             {isTextarea ? (
-              <Textarea className="bg-white focus:border-orange-300 resize-none h-32" placeholder={placeholder} {...field}>
+              <Textarea disabled={disabled} className="bg-white focus:border-orange-300 resize-none h-32" placeholder={placeholder} {...field}>
                 {defaultValue}
               </Textarea>
             ) : (
-              <Input className="bg-white focus:border-orange-300" type={type} placeholder={placeholder} defaultValue={defaultValue} {...field} {...register} />
+              <Input disabled={disabled} className="bg-white focus:border-orange-300" type={type} placeholder={placeholder} defaultValue={defaultValue} {...field} {...register} />
             )}
           </FormControl>
           <FormMessage />

@@ -1,5 +1,5 @@
-import { BriefcaseBusiness, CheckCheck, Cog, DollarSign, File, FileQuestion, Home, List, ListOrdered, MailPlus, Plus, UserPlus, Users } from "lucide-react"
-import { adminRoutes } from "./route"
+import { BriefcaseBusiness, CheckCheck, Cog, DollarSign, File, FileQuestion, Home, List, ListOrdered, MailPlus, Plus, UserPlus, Users } from "lucide-react";
+import { adminRoutes } from "./route";
 
 export const solutionsMenuItems = [
   {
@@ -20,7 +20,7 @@ export const solutionsMenuItems = [
     label: "Documentation",
     description: "We provide simple documentation for position interview and simple outlines.",
   },
-]
+];
 
 export const adminSidebarGroups = [
   {
@@ -41,7 +41,7 @@ export const adminSidebarGroups = [
       {
         id: 2,
         label: "Users",
-        url: adminRoutes.dashboard(),
+        url: adminRoutes.users(),
         icon: Users,
         items: [
           { id: 1, label: "Do Something", url: adminRoutes.dashboard() },
@@ -63,7 +63,7 @@ export const adminSidebarGroups = [
       {
         id: 4,
         label: "Subscriptions",
-        url: adminRoutes.dashboard(),
+        url: adminRoutes.subscriptions(),
         icon: CheckCheck,
         items: [
           { id: 1, label: "Do Something", url: adminRoutes.dashboard() },
@@ -152,7 +152,7 @@ export const adminSidebarGroups = [
       },
     ],
   },
-]
+];
 
 export const adminDashboardShortcuts = [
   {
@@ -239,4 +239,4 @@ export const adminDashboardShortcuts = [
     icon: CheckCheck,
     url: "/",
   },
-]
+];

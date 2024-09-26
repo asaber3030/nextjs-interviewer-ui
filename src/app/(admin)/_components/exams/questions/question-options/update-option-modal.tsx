@@ -4,34 +4,51 @@ import zod from "zod"
 
 import { useForm } from "react-hook-form"
 import { useMutation } from "@tanstack/react-query"
+import { useState } from "react"
 
-import { InputField } from "@/components/common/input-field"
-import { LoadingButton } from "@/components/common/loading-button"
-import { Form } from "@/components/ui/form"
-import { QuestionSchema } from "@/schema"
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { ExamQuestionOption } from "@prisma/client"
-import { CheckboxField } from "@/components/common/checkbox-field"
-
+import { updateOptionAction } from "@/actions/options"
 import { responseCodes } from "@/lib/api"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
+
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { LoadingButton } from "@/components/common/loading-button"
+import { CheckboxField } from "@/components/common/checkbox-field"
+import { InputField } from "@/components/common/input-field"
+import { Button } from "@/components/ui/button"
+import { Form } from "@/components/ui/form"
 import { Cog } from "lucide-react"
-import { updateOptionAction } from "@/actions/options"
+
+import { ExamQuestionOption } from "@prisma/client"
+import { QuestionSchema } from "@/schema"
+import { ClassValue } from "class-variance-authority/types"
 
 type Props = {
   option: ExamQuestionOption
+  variant?: any
+  label?: string
+  className?: ClassValue
 }
 
-export function UpdateOptionModal({ option }: Props) {
+export function UpdateOptionModal({ label = "Modify", variant = "link", className, option }: Props) {
+  const [open, setOpen] = useState(false)
+
   const form = useForm({
     resolver: zodResolver(QuestionSchema.update),
   })
 
   const updateMutation = useMutation({
     mutationFn: ({ data }: { data: zod.infer<typeof QuestionSchema.update> }) => updateOptionAction(option.id, data),
-    onSuccess: (data) => (data?.status === responseCodes.ok ? toast.success(data.message) : toast.error(data.message)),
+    onSuccess: (data) => {
+      if (data?.status === responseCodes.ok) {
+        toast.success(data.message)
+        form.reset()
+        setOpen(false)
+      } else {
+        toast.error(data.message)
+        return
+      }
+    },
   })
 
   const handleUpdate = () => {
@@ -41,7 +58,7 @@ export function UpdateOptionModal({ option }: Props) {
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="p-0 text-gray-600 gap-0.5" size="sm" variant="link">
           <Cog className="size-4" />

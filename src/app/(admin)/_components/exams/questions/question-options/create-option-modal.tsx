@@ -4,25 +4,33 @@ import zod from "zod"
 
 import { useForm } from "react-hook-form"
 import { useMutation } from "@tanstack/react-query"
+import { useState } from "react"
 
 import { InputField } from "@/components/common/input-field"
 import { LoadingButton } from "@/components/common/loading-button"
 import { Form } from "@/components/ui/form"
-import { QuestionOptionSchema, QuestionSchema } from "@/schema"
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { CheckboxField } from "@/components/common/checkbox-field"
 
+import { QuestionOptionSchema } from "@/schema"
+import { ClassValue } from "class-variance-authority/types"
+
+import { createOptionAction } from "@/actions/options"
 import { responseCodes } from "@/lib/api"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
-import { createOptionAction } from "@/actions/options"
+import { cn } from "@/lib/utils"
 
 type Props = {
   questionId: number
+  variant?: any
+  label?: string
+  className?: ClassValue
 }
 
-export function CreateOptionModal({ questionId }: Props) {
+export function CreateOptionModal({ label = "Create Option", variant = "link", className, questionId }: Props) {
+  const [open, setOpen] = useState(false)
   const form = useForm({
     resolver: zodResolver(QuestionOptionSchema.create),
     defaultValues: {
@@ -33,7 +41,16 @@ export function CreateOptionModal({ questionId }: Props) {
 
   const updateMutation = useMutation({
     mutationFn: ({ data }: { data: zod.infer<typeof QuestionOptionSchema.create> }) => createOptionAction(questionId, data),
-    onSuccess: (data) => (data?.status === responseCodes.ok ? toast.success(data.message) : toast.error(data.message)),
+    onSuccess: (data) => {
+      if (data?.status === responseCodes.ok) {
+        toast.success(data.message)
+        form.reset()
+        setOpen(false)
+      } else {
+        toast.error(data.message)
+        return
+      }
+    },
   })
 
   const handleCreate = () => {
@@ -43,10 +60,10 @@ export function CreateOptionModal({ questionId }: Props) {
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="link" className="px-0">
-          Create Option
+        <Button variant={variant} className={cn("px-0", className)}>
+          {label}
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-white">

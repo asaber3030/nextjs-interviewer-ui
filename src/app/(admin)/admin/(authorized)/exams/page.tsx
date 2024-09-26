@@ -1,17 +1,19 @@
 import PageTitle from "@/app/(admin)/_components/ui/title"
-import FilterAll from "@/app/(admin)/_components/ui/filter"
 import Link from "next/link"
 
-import { Hash } from "lucide-react"
 import { SearchParams } from "@/types"
 import { AdminCareerCard } from "@/app/(admin)/_components/careers/career-card"
-
-import db from "@/services/prisma"
 import { NoDataAlert } from "@/app/(admin)/_components/ui/no-data"
 import { SearchFilter } from "@/app/(admin)/_components/ui/filter/search"
+import { Metadata } from "next"
+
+import db from "@/services/prisma"
 
 type Props = {
   searchParams: SearchParams
+}
+export const metadata: Metadata = {
+  title: "Exams",
 }
 
 export default async function ExamsPage({ searchParams }: Props) {

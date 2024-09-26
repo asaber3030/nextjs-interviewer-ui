@@ -15,19 +15,23 @@ import { NoDataAlert } from "@/app/(admin)/_components/ui/no-data"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Eye } from "lucide-react"
+import { CreateLevelModal } from "@/app/(admin)/_components/levels"
+import { Metadata } from "next"
 
 import FilterAll from "@/app/(admin)/_components/ui/filter"
 import PageTitle from "@/app/(admin)/_components/ui/title"
 import Image from "next/image"
 import Link from "next/link"
-import { CreateLevelModal } from "@/app/(admin)/_components/levels"
 
 type Props = {
   searchParams: SearchParams
 }
 
+export const metadata: Metadata = {
+  title: "Careers",
+}
+
 export default async function CareersPage({ searchParams }: Props) {
-  console.log(await db.exam.findMany())
   const orderBy = [
     { label: "ID", name: "id" },
     { label: "Name", name: "name" },
