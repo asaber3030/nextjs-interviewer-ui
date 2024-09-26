@@ -81,6 +81,8 @@ model UserMessage {
   createdAt DateTime? @db.Timestamp()
   
   user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("user_messages")
 }
 
 model LoginHistory {
@@ -93,6 +95,8 @@ model LoginHistory {
   createdAt DateTime? @db.Timestamp()
   
   user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("login_history")
 }
 
 model UserActivity {
@@ -107,6 +111,8 @@ model UserActivity {
   createdAt DateTime? @db.Timestamp()
   
   user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("user_activities")
 }
 
 model Plan {
@@ -231,6 +237,8 @@ model ExamOutline {
   description    String? 
   examId         Int
   exam           Exam      @relation(fields: [examId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("exam_outlines")
 }
 
 model UserExam {
