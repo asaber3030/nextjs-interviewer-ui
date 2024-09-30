@@ -83,7 +83,7 @@ export default async function LevelsPage({ searchParams }: Props) {
                       <Eye className="size-4" /> View
                     </Button>
                   </Link>
-                  {!level.deletedAt ? <DeleteModal id={level.id} softAction={softDeleteLevelAction} forceAction={forceDeleteLevelAction} /> : <RestoreModal id={level.id} action={restoreLevelAction} />}
+                  {!level.deletedAt ? <DeleteModal id={level.id} softAction={softDeleteLevelAction} forceAction={forceDeleteLevelAction} /> : <RestoreModal deletedId={level.id} action={restoreLevelAction} />}
                 </TableCell>
               </TableRow>
             ))}

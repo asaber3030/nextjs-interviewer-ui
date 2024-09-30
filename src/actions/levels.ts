@@ -9,9 +9,9 @@ import { LevelSchema } from "@/schema"
 import db from "@/services/prisma"
 import zod from "zod"
 
-export async function getLevelsOfCareer(careerId: number) {
+export async function getLevelsOfCareer(careerId: number, search?: string) {
   return await db.level.findMany({
-    where: { careerId },
+    where: { careerId, name: { contains: search ?? "" } },
   })
 }
 

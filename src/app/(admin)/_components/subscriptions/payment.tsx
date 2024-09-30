@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Subscription } from "@prisma/client"
 import { CreditCard } from "lucide-react"
@@ -22,9 +21,6 @@ export const SubscriptionPaymentDetails = ({ subscription }: Props) => {
             <p className="text-sm text-muted-foreground">Expires 12/2024</p>
           </div>
         </div>
-        <Button variant="outline" className="w-full">
-          Update Payment Method
-        </Button>
       </CardContent>
     </Card>
   )

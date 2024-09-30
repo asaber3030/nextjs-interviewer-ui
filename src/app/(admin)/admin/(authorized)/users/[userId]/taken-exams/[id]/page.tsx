@@ -1,36 +1,39 @@
-import db from "@/services/prisma";
-import moment from "moment";
+import db from "@/services/prisma"
+import moment from "moment"
 
-import React from "react";
-import Link from "next/link";
+import React from "react"
+import Link from "next/link"
 
-import { Clock, CheckCircle2, XCircle, BarChart2, Brain, Target, Download, Share2, BarChart, Eye } from "lucide-react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserPageTitle } from "@/app/(admin)/_components/users/page-title";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Clock, CheckCircle2, XCircle, BarChart2, Brain, Target, BarChart, Eye } from "lucide-react"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { UserPageTitle } from "@/app/(admin)/_components/users/page-title"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 
-import { notFound } from "next/navigation";
-import { formatDuration } from "@/lib/utils";
-import { adminRoutes } from "@/lib/route";
+import { notFound } from "next/navigation"
+import { formatDuration } from "@/lib/utils"
+import { adminRoutes } from "@/lib/route"
+import { DirectionURL, Directions } from "@/components/common/directions"
 
 const examQuestions = [
   { id: 1, question: "What is the capital of France?", userAnswer: "Paris", correctAnswer: "Paris", isCorrect: true },
   { id: 2, question: "Which planet is known as the Red Planet?", userAnswer: "Mars", correctAnswer: "Mars", isCorrect: true },
   { id: 3, question: "What is the largest mammal?", userAnswer: "Elephant", correctAnswer: "Blue Whale", isCorrect: false },
-];
+]
 
 type ExamDetailsProps = {
   params: {
-    id: string;
-  };
-};
+    id: string
+    userId: string
+  }
+}
 
 export default async function ExamDetailsPage({ params }: ExamDetailsProps) {
-  const takenExamId = +params.id;
+  const userId = +params.userId
+  const user = await db.user.findUnique({ where: { id: userId }, select: { username: true, id: true } })
+  const takenExamId = +params.id
   const exam = await db.userExam.findUnique({
     where: {
       id: takenExamId,
@@ -44,26 +47,35 @@ export default async function ExamDetailsPage({ params }: ExamDetailsProps) {
       },
       user: true,
     },
-  });
+  })
 
-  if (!exam) return notFound();
+  if (!exam) return notFound()
 
-  const score = exam.totalQuestions > 0 ? (exam.totalCorrect / exam.totalQuestions) * 100 : 0;
-  const accuracy = exam.totalQuestions > 0 ? ((exam.totalCorrect / exam.totalQuestions) * 100).toFixed(2) : "0.00";
-  const averageTimePerQuestion = exam.totalQuestions > 0 ? ((exam.totalDuration * 60) / exam.totalQuestions).toFixed(2) : "0.00";
+  const score = exam.totalQuestions > 0 ? (exam.totalCorrect / exam.totalQuestions) * 100 : 0
+  const accuracy = score.toFixed(2)
+  const averageTimePerQuestion = exam.totalQuestions > 0 ? ((exam.totalDuration * 60) / exam.totalQuestions).toFixed(2) : "0.00"
+
+  if (!user) return notFound()
+  if (user.id !== exam.userId) return notFound()
+
+  const urls: DirectionURL[] = [
+    { href: adminRoutes.users(), label: "Users" },
+    { href: adminRoutes.viewUser(user.id), label: `@${user?.username}` },
+    { href: adminRoutes.userTakenExams(user.id), label: "Taken Exams" },
+    { href: adminRoutes.viewUserTakenExam(user.id, exam.id), label: exam.exam.title, disabled: true },
+  ]
 
   return (
     <div>
       <UserPageTitle user={exam.user} />
 
+      <Directions urls={urls} className="my-4" />
+
       <h1 className="text-xl font-semibold my-2">
-        <Link
-          href={adminRoutes.viewExam(exam.exam.id)}
-          className="text-blue-500 hover:underline"
-        >
+        Results of{" "}
+        <Link href={adminRoutes.viewExam(exam.exam.id)} className="text-blue-500 hover:underline">
           {exam.exam.title} #{exam.examId}
-        </Link>{" "}
-        Results
+        </Link>
       </h1>
 
       <div className="grid gap-2 md:grid-cols-3">
@@ -77,10 +89,7 @@ export default async function ExamDetailsPage({ params }: ExamDetailsProps) {
               <div className="space-y-2">
                 <h3 className="text-lg font-semibold">Score</h3>
                 <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                  <div
-                    className="bg-green-600 h-2.5 rounded-full"
-                    style={{ width: `${score}%` }}
-                  ></div>
+                  <div className="bg-green-600 h-2.5 rounded-full" style={{ width: `${score}%` }}></div>
                 </div>
                 <p className="text-sm text-gray-500">
                   {score.toFixed(2)}% ({exam.totalCorrect} out of {exam.totalQuestions})
@@ -108,10 +117,7 @@ export default async function ExamDetailsPage({ params }: ExamDetailsProps) {
                 <h3 className="text-lg font-semibold">Answer Breakdown</h3>
                 <div className="flex items-center space-x-2">
                   <div className="flex-1 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                    <div
-                      className="bg-green-600 h-2.5 rounded-full"
-                      style={{ width: exam.totalQuestions > 0 ? `${score}%` : "0%" }}
-                    ></div>
+                    <div className="bg-green-600 h-2.5 rounded-full" style={{ width: exam.totalQuestions > 0 ? `${score}%` : "0%" }}></div>
                   </div>
                   <div className="flex items-center space-x-1">
                     <CheckCircle2 className="w-4 h-4 text-green-600" />
@@ -125,62 +131,6 @@ export default async function ExamDetailsPage({ params }: ExamDetailsProps) {
               </div>
             </div>
           </CardContent>
-        </Card>
-
-        <Card className="h-fit">
-          <CardHeader>
-            <CardTitle>Exam Information</CardTitle>
-            <CardDescription>Details about the exam you took</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Exam Title</p>
-                <p className="font-medium line-clamp-1">{exam.exam.title}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Career</p>
-                <Link
-                  href={adminRoutes.viewCareer(exam.exam.career.id)}
-                  className="font-medium text-blue-500 hover:underline"
-                >
-                  {exam.exam.career.name}
-                </Link>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Date Taken</p>
-                <p className="font-medium">{moment(exam.startedAt).format("DD MMM, YYYY - HH:mm")}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Ended At</p>
-                <p className="font-medium">{moment(exam.endedAt).format("DD MMM, YYYY - HH:mm")}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Total Questions</p>
-                <p className="font-medium">{exam.totalQuestions}</p>
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex flex-wrap gap-2">
-            <Link href={adminRoutes.viewExam(exam.exam.id)}>
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center"
-              >
-                <Eye className="w-4 h-4 mr-2" />
-                View Exam
-              </Button>
-            </Link>
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center"
-            >
-              <BarChart className="w-4 h-4 mr-2" />
-              View Detailed Analytics
-            </Button>
-          </CardFooter>
         </Card>
 
         <Card className="h-fit">
@@ -216,6 +166,51 @@ export default async function ExamDetailsPage({ params }: ExamDetailsProps) {
           </CardContent>
         </Card>
 
+        <Card className="h-fit">
+          <CardHeader>
+            <CardTitle>Exam Information</CardTitle>
+            <CardDescription>Details about the exam you took</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-muted-foreground">Exam Title</p>
+                <p className="font-medium line-clamp-1">{exam.exam.title}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Career</p>
+                <Link href={adminRoutes.viewCareer(exam.exam.career.id)} className="font-medium text-blue-500 hover:underline">
+                  {exam.exam.career.name}
+                </Link>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Date Taken</p>
+                <p className="font-medium">{moment(exam.startedAt).format("DD MMM, YYYY - HH:mm")}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Ended At</p>
+                <p className="font-medium">{moment(exam.endedAt).format("DD MMM, YYYY - HH:mm")}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Total Questions</p>
+                <p className="font-medium">{exam.totalQuestions}</p>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="flex flex-wrap gap-2">
+            <Link href={adminRoutes.viewExam(exam.exam.id)}>
+              <Button variant="outline" size="sm" className="flex items-center">
+                <Eye className="w-4 h-4 mr-2" />
+                View Exam
+              </Button>
+            </Link>
+            <Button variant="outline" size="sm" className="flex items-center">
+              <BarChart className="w-4 h-4 mr-2" />
+              View Detailed Analytics
+            </Button>
+          </CardFooter>
+        </Card>
+
         <Card className="h-fit col-span-3">
           <CardHeader>
             <CardTitle>Question Analysis</CardTitle>
@@ -248,5 +243,5 @@ export default async function ExamDetailsPage({ params }: ExamDetailsProps) {
         </Card>
       </div>
     </div>
-  );
+  )
 }

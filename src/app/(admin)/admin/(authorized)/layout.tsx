@@ -16,11 +16,11 @@ export default async function AdminAuthorizedLayout({ children }: Props) {
 
   return (
     <AdminAuthProvider admin={admin}>
-      <div>
+      <div className="flex">
         <AdminSidebar />
-        <main>
+        <main className="w-full">
           <AdminNavbar />
-          <div className="xl:pl-[350px] xl:pr-7 py-6 px-4">{children}</div>
+          <div className="xl:pr-7 py-6 px-4">{children}</div>
         </main>
       </div>
     </AdminAuthProvider>

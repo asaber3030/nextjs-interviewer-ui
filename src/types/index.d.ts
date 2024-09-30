@@ -1,4 +1,5 @@
 import { Admin, Plan, PlanFeature, ExamQuestion, ExamQuestionOption } from "@prisma/client"
+import { LucideIcon } from "lucide-react"
 
 export type APIResponse<T, P> = {
   message: string

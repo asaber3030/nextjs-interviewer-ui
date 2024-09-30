@@ -23,6 +23,9 @@ export const adminRoutes = {
 
   plans: () => `/admin/plans`,
   viewPlan: (id: number) => `/admin/plans/${id}`,
+  planFeatures: (id: number) => `/admin/plans/${id}/features`,
+  planSubscriptions: (id: number) => `/admin/plans/${id}/subscriptions`,
+  planUsers: (id: number) => `/admin/plans/${id}/users`,
   updatePlan: (id: number) => `/admin/plans/${id}/update`,
 
   categories: () => `/admin/categories`,
@@ -31,6 +34,9 @@ export const adminRoutes = {
 
   careers: () => `/admin/careers`,
   viewCareer: (id: number) => `/admin/careers/${id}`,
+  careerExams: (id: number) => `/admin/careers/${id}/exams`,
+  careerUsers: (id: number) => `/admin/careers/${id}/users`,
+  careerLevels: (id: number) => `/admin/careers/${id}/levels`,
   updateCareer: (id: number) => `/admin/careers/${id}/update`,
 
   levels: () => `/admin/levels`,
@@ -42,6 +48,7 @@ export const adminRoutes = {
   examQuestions: (id: number) => `/admin/exams/${id}/questions`,
   viewQuestion: (examId: number, questionId: number) => `/admin/exams/${examId}/questions/${questionId}`,
   updateExam: (id: number) => `/admin/exams/${id}/update`,
+  createExam: () => `/admin/exams/create`,
 
   takenExams: () => `/admin/taken-exams`,
   viewTakenExam: (id: number) => `/admin/taken-exams/${id}`,

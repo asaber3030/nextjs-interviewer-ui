@@ -10,10 +10,7 @@ type Props = {
 
 export const NavMenuItem = ({ image, url, label, description }: Props) => {
   return (
-    <Link
-      href={url}
-      className="p-2 px-4 rounded-md hover:bg-hoverMain transition-all h-fit"
-    >
+    <Link href={url} className="p-2 px-4 rounded-md hover:bg-hoverMain transition-colors h-fit">
       {image ? (
         <div className="flex items-start gap-4 h-fit">
           <Image alt="Image" src={image} width={40} height={40} />

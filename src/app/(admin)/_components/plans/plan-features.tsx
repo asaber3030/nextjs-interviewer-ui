@@ -1,13 +1,15 @@
-import { PlanFeature } from "@prisma/client"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { diffForHuman } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Edit, Trash } from "lucide-react"
-
 import UpdateFeatureModal from "./features/update-feature-dialog"
+
+import { diffForHuman } from "@/lib/utils"
+import { forceDeletePlanFeatureAction, restorePlanFeatureAction, softDeletePlanFeatureAction } from "@/actions/plans"
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Btn } from "@/components/common/button"
+import { Trash, Undo } from "lucide-react"
 import { DeleteModal } from "../ui/delete-modal"
 import { RestoreModal } from "../ui/restore-modal"
-import { forceDeletePlanFeatureAction, restorePlanFeatureAction, softDeletePlanFeatureAction } from "@/actions/plans"
+
+import { PlanFeature } from "@prisma/client"
 
 type Props = {
   features: PlanFeature[]
@@ -38,7 +40,19 @@ const DisplayPlanFeatures = ({ features }: Props) => {
               <TableCell>
                 <div className="flex gap-2">
                   <UpdateFeatureModal feature={feature} />
-                  {!feature.deletedAt ? <DeleteModal id={feature.id} softAction={softDeletePlanFeatureAction} forceAction={forceDeletePlanFeatureAction} /> : <RestoreModal id={feature.id} action={restorePlanFeatureAction} />}
+                  {!feature.deletedAt ? (
+                    <DeleteModal deletedId={feature.id} softAction={softDeletePlanFeatureAction} forceAction={forceDeletePlanFeatureAction}>
+                      <Btn asChild variant="destructive" icon={Trash} size="sm">
+                        Delete
+                      </Btn>
+                    </DeleteModal>
+                  ) : (
+                    <RestoreModal deletedId={feature.id} action={restorePlanFeatureAction} asChild>
+                      <Btn variant="blue" icon={Undo} size="sm">
+                        Restore
+                      </Btn>
+                    </RestoreModal>
+                  )}
                 </div>
               </TableCell>
             </TableRow>

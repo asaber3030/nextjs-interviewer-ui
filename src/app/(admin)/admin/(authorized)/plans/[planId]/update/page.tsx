@@ -20,26 +20,34 @@ export const metadata: Metadata = {
   title: "Update Plan",
 }
 
+import { DirectionURL, Directions } from "@/components/common/directions"
+import { adminRoutes } from "@/lib/route"
+
 export default async function UpdatePlanPage({ params }: Props) {
   const plan = await getPlan(+params.planId)
   if (!plan) return notFound()
 
+  const urls: DirectionURL[] = [
+    { href: adminRoutes.users(), label: "Users" },
+    { href: adminRoutes.plans(), label: "Plans" },
+    { href: adminRoutes.viewPlan(plan.id), label: `Plan -> ${plan.name}` },
+    { href: adminRoutes.updatePlan(plan.id), label: `Action -> Update`, disabled: true },
+  ]
+
   return (
     <div>
-      <PageTitle
-        title={`Update Plan - ${plan.name} #${plan.id}`}
-        parentClassName="mb-4"
-      />
+      <PageTitle title={`Update Plan - ${plan.name} #${plan.id}`} parentClassName="mb-4" />
+      <Directions urls={urls} className="my-4" />
       <div className="grid xl:grid-cols-8 grid-cols-1 md:grid-cols-6 gap-4">
-        <div className="xl:col-span-3 md:col-span-2">
-          <AdminPlanCard plan={plan} showActions={false} />
-        </div>
         <div className="xl:col-span-5 md:col-span-4">
           <UpdatePlanForm plan={plan} />
         </div>
+        <div className="xl:col-span-3 md:col-span-2">
+          <AdminPlanCard plan={plan} showActions={false} />
+        </div>
       </div>
       <Separator className="my-4 " />
-      <PageTitle title={`Features`} parentClassName="mb-4" />{" "}
+      <PageTitle title={`Features`} parentClassName="mb-4" />
       <DisplayPlanFeatures features={plan.features} />
     </div>
   )

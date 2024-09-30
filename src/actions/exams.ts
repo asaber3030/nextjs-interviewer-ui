@@ -34,13 +34,17 @@ export async function updateExamAction(id: number, careerId: number, levelId: nu
   }
 }
 
-export async function createExamAction(data: zod.infer<typeof ExamSchema.create>) {
+export async function createExamAction(careerId: number, levelId: number, data: zod.infer<typeof ExamSchema.create>) {
   try {
-    await db.exam.create({
-      data: data,
+    const exam = await db.exam.create({
+      data: {
+        ...data,
+        careerId,
+        levelId,
+      },
     })
     revalidatePath(adminRoutes.exams())
-    return actionResponse(responseCodes.ok, "Created")
+    return actionResponse(responseCodes.ok, "Created", exam)
   } catch (error) {
     return actionResponse(responseCodes.serverError, "Failed to updated, Something went wrong.", null, error)
   }

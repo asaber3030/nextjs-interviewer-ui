@@ -1,7 +1,8 @@
-import PageTitle from "@/app/(admin)/_components/ui/title"
 import Link from "next/link"
-import React from "react"
 import Image from "next/image"
+import React from "react"
+import PageTitle from "@/app/(admin)/_components/ui/title"
+import EmptyStateCard from "@/components/common/empty-state"
 
 import db from "@/services/prisma"
 import moment from "moment"
@@ -15,8 +16,6 @@ import { Button } from "@/components/ui/button"
 import { Eye, FileSymlink, Mail, MoreHorizontal, Printer, User } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Metadata } from "next"
-
-import EmptyStateCard from "@/components/common/empty-state"
 
 export const metadata: Metadata = {
   title: "Subscriptions",
@@ -58,7 +57,7 @@ export default async function SubscriptionsPage() {
               <TableRow key={subscription.id}>
                 <TableCell>{subscription.id}</TableCell>
                 <TableCell className="w-[300px]">
-                  <Link className="px-4 py-2 flex gap-4 text-sm rounded-md font-semibold hover:bg-gray-100 transition-all w-fit items-center" href={adminRoutes.viewUser(subscription.user.id)}>
+                  <Link className="px-4 py-2 flex gap-4 text-sm rounded-md font-semibold hover:bg-gray-100 transition-colors w-fit items-center" href={adminRoutes.viewUser(subscription.user.id)}>
                     <Image src={"/images/defaults/user.svg"} width={40} height={40} alt="User" className="rounded-md" />
                     <div>
                       <p>{subscription.user.name}</p>

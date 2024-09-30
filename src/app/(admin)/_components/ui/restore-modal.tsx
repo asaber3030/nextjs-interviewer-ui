@@ -3,29 +3,27 @@
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 
-import { toast } from "sonner"
-
 import { LoadingButton } from "@/components/common/loading-button"
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Trash, Undo } from "lucide-react"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Button, ButtonProps } from "@/components/ui/button"
 import { APIResponse } from "@/types"
+import { showResponseMessage } from "@/lib/utils"
 
-type Props = {
+interface Props extends ButtonProps {
+  deletedId: number
+  children: React.ReactNode
+  asChild?: boolean
   title?: string
-  id: number
+  description?: string
   action: (id: number) => Promise<APIResponse<any, any>>
 }
 
-export const RestoreModal = ({ id, action, title = "Restore Action" }: Props) => {
+export const RestoreModal = ({ children, asChild, deletedId, title = "Restore Action", description = "Once you restore this item users will be able to use it again.", action }: Props) => {
   const [open, setOpen] = useState(false)
 
   const restoreMutation = useMutation({
-    mutationFn: () => action(id),
-    onSuccess: (data) => {
-      toast.message(data.message)
-      setOpen(false)
-    },
+    mutationFn: () => action(deletedId),
+    onSuccess: (data) => showResponseMessage(data, () => setOpen(false)),
   })
 
   const handleRestore = () => {
@@ -34,22 +32,21 @@ export const RestoreModal = ({ id, action, title = "Restore Action" }: Props) =>
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <Button size="sm" variant="outline-blue" asChild>
-          <span className="flex gap-2 items-center">
-            <Undo className="size-4" />
-          </span>
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
 
       <DialogContent className="bg-white">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
         <DialogFooter>
-          <DialogClose className="border rounded-md px-4 hover:bg-gray-50 font-semibold text-sm">Close</DialogClose>
-          <LoadingButton loading={restoreMutation.isPending} variant="outline-blue" onClick={handleRestore}>
+          <DialogClose asChild>
+            <Button size="sm" variant="outline">
+              Close
+            </Button>
+          </DialogClose>
+          <LoadingButton size="sm" loading={restoreMutation.isPending} variant="outline-blue" onClick={handleRestore}>
             Restore
           </LoadingButton>
         </DialogFooter>

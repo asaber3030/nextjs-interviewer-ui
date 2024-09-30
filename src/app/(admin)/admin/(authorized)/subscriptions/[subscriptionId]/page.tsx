@@ -6,12 +6,13 @@ import db from "@/services/prisma"
 import { notFound } from "next/navigation"
 
 import { Printer, UserIcon } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { SubscriptionActions } from "@/app/(admin)/_components/subscriptions/actions"
 import { SubscriptionPaymentDetails } from "@/app/(admin)/_components/subscriptions/payment"
 import { SubscriptionDetails } from "@/app/(admin)/_components/subscriptions/details"
 import { SubscriptionUser } from "@/app/(admin)/_components/subscriptions/user"
+import { LinkBtn } from "@/components/common/button"
+import { adminRoutes } from "@/lib/route"
 
 type Props = {
   params: { subscriptionId: string }
@@ -37,11 +38,9 @@ export default async function SubscriptionIdPage({ params }: Props) {
   if (!subscription) return notFound()
 
   const pageTitle = (
-    <span className="items-center flex gap-4">
+    <span className="items-center flex gap-2">
       Subscription
-      <Badge variant="outline" className="h-10 rounded-md bg-white shadow-sm text-lg">
-        {subscription?.invoiceId}
-      </Badge>
+      <b>#{subscription?.invoiceId}</b>
     </span>
   )
 
@@ -51,9 +50,9 @@ export default async function SubscriptionIdPage({ params }: Props) {
         <Button variant="success">
           <Printer className="size-4" /> Print
         </Button>
-        <Button variant="blue">
-          <UserIcon className="size-4" /> View User
-        </Button>
+        <LinkBtn variant="blue" href={adminRoutes.viewUser(subscription.userId)} icon={UserIcon}>
+          View User
+        </LinkBtn>
       </PageTitle>
 
       <div className="">

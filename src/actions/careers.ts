@@ -9,6 +9,12 @@ import { CareerSchema } from "@/schema"
 import db from "@/services/prisma"
 import zod from "zod"
 
+export async function getCareers(search?: string) {
+  return await db.career.findMany({
+    where: { name: { contains: search ?? "" } },
+  })
+}
+
 export async function updateCareerAction(id: number, data: zod.infer<typeof CareerSchema.update>) {
   try {
     await db.career.update({

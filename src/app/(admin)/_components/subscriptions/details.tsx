@@ -1,6 +1,5 @@
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
 import { Plan, Subscription } from "@prisma/client"
 
 import moment from "moment"
@@ -19,23 +18,23 @@ export const SubscriptionDetails = ({ subscription }: Props) => {
       <CardContent>
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <span className="font-semibold">Plan:</span>
+            <span className="font-semibold text-sm">Plan</span>
             <Badge variant="secondary">{subscription.plan.name}</Badge>
           </div>
           <div className="flex justify-between items-center">
-            <span className="font-semibold">Status:</span>
+            <span className="font-semibold text-sm">Status</span>
             <Badge variant="success">{subscription.status}</Badge>
           </div>
           <div className="flex justify-between items-center">
-            <span className="font-semibold">Currency</span>
+            <span className="font-semibold text-sm">Currency</span>
             <span>{subscription.currency}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="font-semibold">Subscribed At</span>
+            <span className="font-semibold text-sm">Subscribed At</span>
             <span>{subscription.subscribedAt ? moment(subscription.subscribedAt).fromNow() : <Badge variant="destructive">Not-Available</Badge>}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="font-semibold">Total:</span>
+            <span className="font-semibold text-sm">Total</span>
             <span className="text-lg font-bold">
               {subscription.subTotal} {subscription.currency}
             </span>

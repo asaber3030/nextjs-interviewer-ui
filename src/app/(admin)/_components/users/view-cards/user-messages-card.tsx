@@ -1,26 +1,23 @@
-"use client";
+"use client"
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { adminRoutes } from "@/lib/route";
-import { UserMessage } from "@prisma/client";
-import { CalendarIcon, MessageCircle } from "lucide-react";
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { adminRoutes } from "@/lib/route"
+import { UserMessage } from "@prisma/client"
+import { CalendarIcon, MessageCircle } from "lucide-react"
 
-import moment from "moment";
-import { useRouter } from "next/navigation";
+import moment from "moment"
+import { useRouter } from "next/navigation"
 
 type Props = {
-  messages: UserMessage[];
-  userId: number;
-};
+  messages: UserMessage[]
+  userId: number
+}
 
 export function UserMessagesCard({ messages, userId }: Props) {
-  const router = useRouter();
+  const router = useRouter()
   return (
-    <Card
-      className="h-fit hover:shadow-md transition-all hover:border-orange-200 cursor-pointer"
-      onClick={() => router.push(adminRoutes.userMessages(userId))}
-    >
+    <Card className="h-fit hover:shadow-md transition-colors hover:border-orange-200 cursor-pointer" onClick={() => router.push(adminRoutes.userMessages(userId))}>
       <CardHeader>
         <CardTitle>Lastest Sent Messages</CardTitle>
       </CardHeader>
@@ -32,10 +29,7 @@ export function UserMessagesCard({ messages, userId }: Props) {
         ) : (
           <ul className="divide-y">
             {messages.map((message) => (
-              <li
-                key={message.id}
-                className="flex justify-between items-start py-2"
-              >
+              <li key={message.id} className="flex justify-between items-start py-2">
                 <div className="flex flex-col gap-2">
                   <span className="flex items-center line-clamp-1 gap-2">{message.title}</span>
                   <div className="flex items-center gap-2">
@@ -50,5 +44,5 @@ export function UserMessagesCard({ messages, userId }: Props) {
         )}
       </CardContent>
     </Card>
-  );
+  )
 }

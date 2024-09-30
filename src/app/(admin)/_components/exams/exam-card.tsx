@@ -26,7 +26,7 @@ export const AdminExamCard = async ({ exam }: Props) => {
   })
 
   return (
-    <div className="bg-white h-fit rounded-sm shadow-sm border transition-all hover:scale-105 p-4">
+    <div className="bg-white h-fit rounded-sm shadow-sm transition-colors hover:scale-[1.02] p-4">
       <section className="text-center space-y-4">
         <Link href={adminRoutes.viewExam(exam.id)} className="font-serif font-semibold text-xl hover:underline hover:text-blue-600">
           {exam.title}

@@ -1,28 +1,28 @@
-import { createPagination } from "@/lib/utils"
 import db from "@/services/prisma"
-import { SearchParams } from "@/types"
-import { notFound } from "next/navigation"
-
-import { forceDeleteCareerAction, restoreCareerAction, softDeleteCareerAction } from "@/actions/careers"
-import { adminRoutes } from "@/lib/route"
-
-import { UpdateCareerModal, CreateCareerModal } from "@/app/(admin)/_components/careers"
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { DeleteModal } from "@/app/(admin)/_components/ui/delete-modal"
-import { RestoreModal } from "@/app/(admin)/_components/ui/restore-modal"
-import { PaginateNext } from "@/app/(admin)/_components/ui/pagination/paginate-next"
-import { PaginatePrevious } from "@/app/(admin)/_components/ui/pagination/paginate-previous"
-import { NoDataAlert } from "@/app/(admin)/_components/ui/no-data"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Eye } from "lucide-react"
 
 import FilterAll from "@/app/(admin)/_components/ui/filter"
 import PageTitle from "@/app/(admin)/_components/ui/title"
 import Image from "next/image"
 import Link from "next/link"
-import { CreateLevelModal } from "@/app/(admin)/_components/levels"
+
+import { createPaginationByArgs } from "@/lib/utils"
+import { notFound } from "next/navigation"
+import { forceDeleteCareerAction, restoreCareerAction, softDeleteCareerAction } from "@/actions/careers"
+import { adminRoutes } from "@/lib/route"
 import { getCategories } from "@/actions/categories"
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { CreateCareerModal } from "@/app/(admin)/_components/careers"
+import { DeleteModal } from "@/app/(admin)/_components/ui/delete-modal"
+import { RestoreModal } from "@/app/(admin)/_components/ui/restore-modal"
+import { NoDataAlert } from "@/app/(admin)/_components/ui/no-data"
+import { CreateLevelModal } from "@/app/(admin)/_components/levels"
+import { DefaultTableFooter } from "@/app/(admin)/_components/ui/table-footer"
+import { CareersOrderBy } from "@/lib/order-by"
+import { SearchParams } from "@/types"
+import { Eye } from "lucide-react"
 
 type Props = {
   params: { categoryId: string }
@@ -32,20 +32,18 @@ type Props = {
 export default async function ViewCategoryPage({ params, searchParams }: Props) {
   const categoryId = +params.categoryId
   const category = await db.category.findUnique({ where: { id: categoryId } })
+
   const categories = await getCategories()
-  const orderBy = [
-    { label: "ID", name: "id" },
-    { label: "Name", name: "name" },
-  ]
-  const pagination = createPagination(searchParams)
+
+  const countCareers = await db.career.count({ where: { categoryId } })
+  const pagination = createPaginationByArgs(searchParams, countCareers)
+
   if (!category) return notFound()
 
   const careers = await db.career.findMany({
     include: { _count: { select: { levels: true } }, category: true },
-    orderBy: { [pagination.orderBy ?? "id"]: pagination.orderType ?? "asc" },
     where: { categoryId: category?.id },
-    skip: pagination.skip,
-    take: pagination.take,
+    ...pagination.args,
   })
 
   const pageTitle = (
@@ -60,7 +58,7 @@ export default async function ViewCategoryPage({ params, searchParams }: Props) 
         <CreateCareerModal categories={categories} />
       </PageTitle>
 
-      <FilterAll parentClassName="grid grid-cols-4 gap-2" orderByArray={orderBy} searchParams={searchParams} />
+      <FilterAll parentClassName="grid grid-cols-4 gap-2" orderByArray={CareersOrderBy} searchParams={searchParams} />
 
       {careers.length == 0 ? (
         <NoDataAlert title="No data to show" />
@@ -93,24 +91,14 @@ export default async function ViewCategoryPage({ params, searchParams }: Props) 
                     </Button>
                   </Link>
                   <CreateLevelModal label="" careers={careers} defaultCareerId={career.id} />
-                  {!career.deletedAt ? <DeleteModal id={career.id} softAction={softDeleteCareerAction} forceAction={forceDeleteCareerAction} /> : <RestoreModal id={career.id} action={restoreCareerAction} />}
+                  {!career.deletedAt ? <DeleteModal id={career.id} softAction={softDeleteCareerAction} forceAction={forceDeleteCareerAction} /> : <RestoreModal deletedId={career.id} action={restoreCareerAction} />}
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
-
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={4}>
-                <PaginatePrevious />
-              </TableCell>
-              <TableCell className="text-right">
-                <PaginateNext />
-              </TableCell>
-            </TableRow>
-          </TableFooter>
         </Table>
       )}
+      <DefaultTableFooter searchParams={searchParams} hasNextPage={!pagination.hasNextPage} />
     </div>
   )
 }

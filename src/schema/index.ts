@@ -1,6 +1,6 @@
-import { USER_PICTURE_ACCEPTED_IMAGE_TYPES, USER_PICTURE_MAX_FILE_SIZE } from "@/lib/constants";
-import { Priority, QuestionType } from "@prisma/client";
-import zod from "zod";
+import { USER_PICTURE_ACCEPTED_IMAGE_TYPES, USER_PICTURE_MAX_FILE_SIZE } from "@/lib/constants"
+import { Priority, QuestionType } from "@prisma/client"
+import zod from "zod"
 
 export const UserSchema = {
   login: zod.object({
@@ -49,7 +49,7 @@ export const UserSchema = {
     planId: zod.number({ message: "Plan Required" }).min(0, { message: "Plan Id Required" }),
     careerId: zod.number({ message: "Career Required" }).min(0, { message: "Career Id Required" }),
   }),
-};
+}
 
 export const AdminSchema = {
   login: zod.object({
@@ -63,7 +63,7 @@ export const AdminSchema = {
     jobTitle: zod.string().min(1, { message: "Job Title is required" }),
     jobDescription: zod.string().min(1, { message: "Job Description is required" }),
   }),
-};
+}
 
 export const PlanSchema = {
   update: zod.object({
@@ -76,7 +76,7 @@ export const PlanSchema = {
     description: zod.string().min(100, { message: "Description cannot be less than 100 characters." }).optional(),
     paymentLink: zod.string().url({ message: "Invalid URL" }).optional(),
   }),
-};
+}
 
 export const PlanFeatureSchema = {
   create: zod.object({
@@ -89,7 +89,7 @@ export const PlanFeatureSchema = {
     description: zod.string().min(20, { message: "Description cannot be less than 100 characters." }).optional(),
     isActive: zod.boolean().optional(),
   }),
-};
+}
 
 export const CategorySchema = {
   create: zod.object({
@@ -100,7 +100,7 @@ export const CategorySchema = {
     name: zod.string().min(1, { message: "Name is required" }).max(50, { message: "Plan name cannot me more than 50 characters" }).optional(),
     description: zod.string().min(20, { message: "Description cannot be less than 100 characters." }).optional(),
   }),
-};
+}
 
 export const CareerSchema = {
   create: zod.object({
@@ -113,7 +113,7 @@ export const CareerSchema = {
     description: zod.string().min(20, { message: "Description cannot be less than 100 characters." }).optional(),
     categoryId: zod.string().min(0, { message: "Category Id Required" }).optional(),
   }),
-};
+}
 
 export const LevelSchema = {
   create: zod.object({
@@ -126,7 +126,7 @@ export const LevelSchema = {
     description: zod.string().min(20, { message: "Description cannot be less than 100 characters." }).optional(),
     careerId: zod.string().min(0, { message: "Career Id Required" }).optional(),
   }),
-};
+}
 
 export const ExamSchema = {
   create: zod.object({
@@ -141,7 +141,7 @@ export const ExamSchema = {
     totalQuestions: zod.number().min(0, { message: "Total Questions cannot be 0" }).optional(),
     duration: zod.number().min(0, { message: "Duration cannot be 0" }).optional(),
   }),
-};
+}
 
 export const QuestionSchema = {
   create: zod.object({
@@ -160,7 +160,7 @@ export const QuestionSchema = {
     order: zod.number().min(0, { message: "Order cannot be 0" }).optional(),
     points: zod.number().min(0, { message: "Duration cannot be 0" }).optional(),
   }),
-};
+}
 export const QuestionOptionSchema = {
   create: zod.object({
     title: zod.string().min(1, { message: "Name is required" }).max(50, { message: "Plan name cannot me more than 50 characters" }),
@@ -170,7 +170,7 @@ export const QuestionOptionSchema = {
     title: zod.string().min(1, { message: "Name is required" }).max(50, { message: "Plan name cannot me more than 50 characters" }).optional(),
     isCorrect: zod.boolean().optional(),
   }),
-};
+}
 
 export const UserMessageSchema = {
   create: zod.object({
@@ -183,4 +183,4 @@ export const UserMessageSchema = {
     description: zod.string().min(5, { message: "Content cannot be at least 5 characters." }).optional(),
     priority: zod.enum([Priority.Low, Priority.Medium, Priority.High], { message: "Priority invalid type" }).optional(),
   }),
-};
+}

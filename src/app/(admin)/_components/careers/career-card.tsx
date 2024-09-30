@@ -9,7 +9,7 @@ type Props = { career: Career }
 
 export const AdminCareerCard = async ({ career }: Props) => {
   return (
-    <Link href={adminRoutes.viewCareer(career.id)} className="bg-white shadow-sm rounded-sm flex gap-2 p-4 transition-all border hover:border-orange-300">
+    <Link href={adminRoutes.viewCareer(career.id)} className="bg-white shadow-sm rounded-sm flex gap-2 p-4 transition-colors border hover:border-orange-300">
       <Image alt="Career Icon" src={career.icon ?? defaultImagePlaceholder} width={40} height={40} />
       <div>
         <p className="text-sm font-medium line-clamp-1">{career.name}</p>

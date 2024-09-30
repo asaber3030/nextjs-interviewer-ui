@@ -23,10 +23,10 @@ import { Career } from "@prisma/client"
 import { SelectField } from "@/components/common/select-field"
 import { SelectItem } from "@/components/ui/select"
 import { ClassValue } from "class-variance-authority/types"
-import { cn } from "@/lib/utils"
+import { cn, showResponseMessage } from "@/lib/utils"
 
 type Props = {
-  careers: Career[]
+  careers?: Career[]
   defaultCareerId?: number
   buttonClassName?: ClassValue
   label?: string
@@ -40,21 +40,13 @@ export function CreateLevelModal({ careers, defaultCareerId, buttonClassName, la
     defaultValues: {
       name: "",
       description: "",
-      careerId: defaultCareerId ? String(defaultCareerId) : String(careers[0]?.id),
+      careerId: defaultCareerId ? String(defaultCareerId) : String(careers?.[0]?.id),
     },
   })
 
   const createMutation = useMutation({
     mutationFn: ({ data }: { data: zod.infer<typeof LevelSchema.create> }) => createLevelAction(data),
-    onSuccess: (data) => {
-      if (data?.status === responseCodes.ok) {
-        toast.success(data.message)
-        setOpen(false)
-      } else {
-        toast.error(data.message)
-        return
-      }
-    },
+    onSuccess: (data) => showResponseMessage(data, () => setOpen(false)),
   })
 
   const handleCreate = () => {
@@ -83,7 +75,7 @@ export function CreateLevelModal({ careers, defaultCareerId, buttonClassName, la
             <InputField control={form.control} name="name" label="Level Name" />
             <InputField control={form.control} name="description" label="Description" isTextarea />
             <SelectField control={form.control} name="careerId" label="Career">
-              {careers.map((career) => (
+              {careers?.map((career) => (
                 <SelectItem key={`career-select-item-${career.id}`} value={String(career.id)}>
                   {career.name}
                 </SelectItem>

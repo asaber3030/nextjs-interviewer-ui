@@ -5,7 +5,9 @@ import adminSidebarReducer from "./slices/adminSidebar.slice"
 
 export const makeStore = () => {
   return configureStore({
-    reducer: {},
+    reducer: {
+      adminSidebar: adminSidebarReducer,
+    },
   })
 }
 
